@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import com.example.dyeTrack.core.entity.setOfPlannedExercise.SetOfPlannedExercise;
 import com.example.dyeTrack.core.entity.setOfPlannedExercise.SetOfPlannedExercise.SetType;
+import com.example.dyeTrack.core.entity.setOfPlannedExercise.SetOfPlannedExercise.Side;
 
 public class SetOfPlannedExerciseReturnDTO {
 
@@ -16,6 +17,8 @@ public class SetOfPlannedExerciseReturnDTO {
     @Enumerated(EnumType.STRING)
     private SetType typeOfSet;
 
+    private Side side;
+
     public SetOfPlannedExerciseReturnDTO() {
     }
 
@@ -25,6 +28,7 @@ public class SetOfPlannedExerciseReturnDTO {
         this.rir = setOfPlannedExercise.getRir();
         this.charge = setOfPlannedExercise.getCharge();
         this.typeOfSet = setOfPlannedExercise.getTypeOfSet();
+        this.side = setOfPlannedExercise.getSide();
 
     }
 
@@ -66,5 +70,13 @@ public class SetOfPlannedExerciseReturnDTO {
 
     public void setTypeOfSet(SetType typeOfSet) {
         this.typeOfSet = typeOfSet;
+    }
+
+    public Side getSide() {
+        return side;
+    }
+
+    public void setSide(Side side) {
+        this.side = side;
     }
 }

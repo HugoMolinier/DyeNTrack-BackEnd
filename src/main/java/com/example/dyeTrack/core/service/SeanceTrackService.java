@@ -1,7 +1,9 @@
 package com.example.dyeTrack.core.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -101,16 +103,21 @@ public class SeanceTrackService implements SeanceTrackUseCase {
             plannedExercise.setSeanceTrack(seanceTrack);
 
             // 🔁 Ajouter les sets liés à cet exercice
+            Map<Integer, List<SetOfPlannedExercise.Side>> orderRecurenceSide = new HashMap<>();
             for (SetOfPlannedExerciseVO setVO : exerciseVO.getSets()) {
                 SetOfPlannedExercise set = new SetOfPlannedExercise();
+
                 set.setSetOrder(setVO.getSetOrder());
                 set.setRepsNumber(setVO.getRepsNumber());
                 set.setRir(setVO.getRir());
                 set.setCharge(setVO.getCharge());
                 set.setTypeOfSet(setVO.getTypeOfSet());
                 set.setPlannedExercise(plannedExercise);
+                set.setSide(setVO.getSide());
 
                 plannedExercise.getSetsOfPlannedExercise().add(set);
+
+                verifySide(orderRecurenceSide, setVO.getSetOrder(), setVO.getSide());
             }
 
             seanceTrack.getPlannedExercises().add(plannedExercise);
@@ -148,6 +155,30 @@ public class SeanceTrackService implements SeanceTrackUseCase {
                 .map(DayDataOfUser::getSeanceTrack)
                 .filter(seance -> seance != null)
                 .toList();
+    }
+
+    // Méthode de vérification
+    private void verifySide(Map<Integer, List<SetOfPlannedExercise.Side>> map, int setOrder,
+            SetOfPlannedExercise.Side side) {
+        List<SetOfPlannedExercise.Side> sides = map.computeIfAbsent(setOrder, k -> new ArrayList<>());
+
+        if (side == SetOfPlannedExercise.Side.BOTH) {
+            if (!sides.isEmpty()) {
+                throw new IllegalArgumentException(
+                        "Impossible d'ajouter BOTH si des sides individuels existent pour setOrder " + setOrder);
+            }
+            sides.add(SetOfPlannedExercise.Side.BOTH);
+        } else {
+            if (sides.contains(SetOfPlannedExercise.Side.BOTH)) {
+                throw new IllegalArgumentException(
+                        "Impossible d'ajouter " + side + " car BOTH existe déjà pour setOrder " + setOrder);
+            }
+            if (sides.contains(side)) {
+                throw new IllegalArgumentException(
+                        "Side " + side + " déjà ajouté pour setOrder " + setOrder);
+            }
+            sides.add(side);
+        }
     }
 
 }

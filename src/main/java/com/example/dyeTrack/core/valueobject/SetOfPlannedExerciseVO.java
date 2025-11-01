@@ -1,6 +1,7 @@
 package com.example.dyeTrack.core.valueobject;
 
 import com.example.dyeTrack.core.entity.setOfPlannedExercise.SetOfPlannedExercise.SetType;
+import com.example.dyeTrack.core.entity.setOfPlannedExercise.SetOfPlannedExercise.Side;
 
 public class SetOfPlannedExerciseVO {
 
@@ -9,16 +10,18 @@ public class SetOfPlannedExerciseVO {
     private int rir;
     private double charge;
     private SetType typeOfSet;
+    private Side side;
 
     public SetOfPlannedExerciseVO() {
     }
 
-    public SetOfPlannedExerciseVO(int setOrder, int repsNumber, int rir, double charge, SetType typeOfSet) {
+    public SetOfPlannedExerciseVO(int setOrder, int repsNumber, int rir, double charge, SetType typeOfSet, Side side) {
         this.setOrder = setOrder;
         this.repsNumber = repsNumber;
         this.rir = rir;
         this.charge = charge;
         this.typeOfSet = typeOfSet;
+        this.side = side;
     }
 
     // --- Getters & Setters ---
@@ -60,5 +63,13 @@ public class SetOfPlannedExerciseVO {
 
     public void setTypeOfSet(SetType typeOfSet) {
         this.typeOfSet = typeOfSet;
+    }
+
+    public Side getSide() {
+        return side;
+    }
+
+    public void setSide(Side side) {
+        this.side = side;
     }
 }

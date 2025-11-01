@@ -13,6 +13,10 @@ public class SetOfPlannedExercise {
         WARMUP, EFFECTIVE, TEMPO
     }
 
+    public enum Side {
+        LEFT, RIGHT, BOTH
+    }
+
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "planned_exercise_id", nullable = false)
@@ -28,6 +32,10 @@ public class SetOfPlannedExercise {
 
     @Enumerated(EnumType.STRING)
     private SetType typeOfSet;
+
+    @Id
+    @Enumerated(EnumType.STRING)
+    private Side side = Side.BOTH;
 
     public SetOfPlannedExercise() {
     }
@@ -79,5 +87,13 @@ public class SetOfPlannedExercise {
 
     public void setTypeOfSet(SetType typeOfSet) {
         this.typeOfSet = typeOfSet;
+    }
+
+    public Side getSide() {
+        return side;
+    }
+
+    public void setSide(Side side) {
+        this.side = side;
     }
 }
