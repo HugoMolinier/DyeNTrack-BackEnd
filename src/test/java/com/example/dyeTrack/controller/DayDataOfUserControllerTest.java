@@ -176,31 +176,7 @@ public class DayDataOfUserControllerTest {
 
         @Test
         void testDayDataWithSeanceTrackAndSets() throws Exception {
-                // 1️⃣ Création d'une journée avec SeanceTrack vide
-                DayDataOfUserVO dayDataVO = new DayDataOfUserVO(
-                                LocalDate.of(2025, 10, 10),
-                                new PhysioTrack(70.5f, 12000, 7.5f, "good"),
-                                new NutritionTrack(2500, 150, 70, 300, 30, 50),
-                                new SeanceTrackVO(LocalTime.of(10, 0), null, List.of()) // pas d'exercices
-                );
-
-                // Save initial
-                String response = mockMvc.perform(post("/api/daydata/save")
-                                .header("Authorization", "Bearer " + tokenUser1)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(TestUtils.toJson(objectMapper, dayDataVO)))
-                                .andExpect(status().isCreated())
-                                .andReturn().getResponse().getContentAsString();
-
-                DayDataOfUserReturnDTO savedDay = TestUtils.assertAndExtractData(
-                                response,
-                                "DataDay update Info",
-                                objectMapper,
-                                DayDataOfUserReturnDTO.class);
-
-                assertThat(savedDay).isNotNull();
-                assertThat(savedDay.getSeanceTrack()).isNotNull();
-                assertThat(savedDay.getSeanceTrack().getPlannedExercises()).isEmpty();
+                DayDataOfUserReturnDTO savedDay = createEmptyDayData();
 
                 ExerciseCreateDTO dto = TestUtils.buildExercise(
                                 "Pompes", "Exercise pectoraux",
@@ -218,7 +194,7 @@ public class DayDataOfUserControllerTest {
                 SetOfPlannedExerciseVO set3 = new SetOfPlannedExerciseVO(3, 12, 0, 55.0f, SetType.EFFECTIVE,
                                 Side.RIGHT);
                 SetOfPlannedExerciseVO set4 = new SetOfPlannedExerciseVO(3, 12, 0, 55.0f, SetType.EFFECTIVE, Side.LEFT);
-                PlannedExerciseVO exercise1 = new PlannedExerciseVO(1, createdExe.getIdExercise(), 1L, 1L,
+                PlannedExerciseVO exercise1 = new PlannedExerciseVO(1, createdExe.getIdExercise(), 2L, 1L,
                                 List.of(set1, set2, set3, set4));
                 PlannedExerciseVO exercise2 = new PlannedExerciseVO(2, createdExe2.getIdExercise(), 2L, 2L,
                                 List.of(set1));
@@ -236,7 +212,7 @@ public class DayDataOfUserControllerTest {
                                 updatedSeanceVO);
 
                 // Save updated
-                response = mockMvc.perform(post("/api/daydata/save")
+                String response = mockMvc.perform(post("/api/daydata/save")
                                 .header("Authorization", "Bearer " + tokenUser1)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(TestUtils.toJson(objectMapper, updatedDayVO)))
@@ -457,41 +433,13 @@ public class DayDataOfUserControllerTest {
 
         @Test
         void testWrongSetUnilateral() throws Exception {
-                // 1️⃣ Création d'une journée avec SeanceTrack vide
-                DayDataOfUserVO dayDataVO = new DayDataOfUserVO(
-                                LocalDate.of(2025, 10, 10),
-                                new PhysioTrack(70.5f, 12000, 7.5f, "good"),
-                                new NutritionTrack(2500, 150, 70, 300, 30, 50),
-                                new SeanceTrackVO(LocalTime.of(10, 0), null, List.of()) // pas d'exercices
-                );
-
-                // Save initial
-                String response = mockMvc.perform(post("/api/daydata/save")
-                                .header("Authorization", "Bearer " + tokenUser1)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(TestUtils.toJson(objectMapper, dayDataVO)))
-                                .andExpect(status().isCreated())
-                                .andReturn().getResponse().getContentAsString();
-
-                DayDataOfUserReturnDTO savedDay = TestUtils.assertAndExtractData(
-                                response,
-                                "DataDay update Info",
-                                objectMapper,
-                                DayDataOfUserReturnDTO.class);
-
-                assertThat(savedDay).isNotNull();
-                assertThat(savedDay.getSeanceTrack()).isNotNull();
-                assertThat(savedDay.getSeanceTrack().getPlannedExercises()).isEmpty();
+                DayDataOfUserReturnDTO savedDay = createEmptyDayData();
 
                 ExerciseCreateDTO dto = TestUtils.buildExercise(
                                 "Pompes", "Exercise pectoraux",
                                 List.of(new MuscleInfo(1L, true), new MuscleInfo(2L, false)));
                 ExerciseDetailReturnDTO createdExe = TestUtils.createExercise(mockMvc, objectMapper, tokenUser1, dto);
 
-                ExerciseCreateDTO dto2 = TestUtils.buildExercise(
-                                "traction", "Exercise pectoraux",
-                                List.of(new MuscleInfo(1L, true), new MuscleInfo(2L, false)));
-                ExerciseDetailReturnDTO createdExe2 = TestUtils.createExercise(mockMvc, objectMapper, tokenUser1, dto2);
                 // 2️⃣ Ajouter des exercices avec sets
 
                 SetOfPlannedExerciseVO set1 = new SetOfPlannedExerciseVO(1, 10, 0, 50.0f, SetType.EFFECTIVE, Side.BOTH);
@@ -502,15 +450,12 @@ public class DayDataOfUserControllerTest {
                                 Side.BOTH);
                 PlannedExerciseVO exercise1 = new PlannedExerciseVO(1, createdExe.getIdExercise(), 1L, 1L,
                                 List.of(set1, set2, set3, set4));
-                PlannedExerciseVO exercise2 = new PlannedExerciseVO(2, createdExe2.getIdExercise(), 2L, 2L,
-                                List.of(set1));
 
                 SeanceTrackVO updatedSeanceVO = new SeanceTrackVO(
                                 LocalTime.of(10, 0),
                                 null,
-                                List.of(exercise1, exercise2));
+                                List.of(exercise1));
 
-                assertThat(savedDay.getDayData()).isNotNull();
                 DayDataOfUserVO updatedDayVO = new DayDataOfUserVO(
                                 savedDay.getDayData(),
                                 savedDay.getPhysioTrack(),
@@ -535,4 +480,148 @@ public class DayDataOfUserControllerTest {
                                                                                                // transaction annuler
 
         }
+
+        @Test
+        void testWrongSetUnilateral2() throws Exception {
+                DayDataOfUserReturnDTO savedDay = createEmptyDayData();
+
+                ExerciseCreateDTO dto = TestUtils.buildExercise(
+                                "Pompes", "Exercise pectoraux",
+                                List.of(new MuscleInfo(1L, true), new MuscleInfo(2L, false)));
+                ExerciseDetailReturnDTO createdExe = TestUtils.createExercise(mockMvc, objectMapper, tokenUser1, dto);
+
+                // 2️⃣ Ajouter des exercices avec sets
+
+                SetOfPlannedExerciseVO set1 = new SetOfPlannedExerciseVO(1, 10, 0, 50.0f, SetType.EFFECTIVE, Side.BOTH);
+                SetOfPlannedExerciseVO set2 = new SetOfPlannedExerciseVO(2, 12, 0, 55.0f, SetType.EFFECTIVE,
+                                Side.RIGHT);
+                SetOfPlannedExerciseVO set3 = new SetOfPlannedExerciseVO(2, 12, 0, 55.0f, SetType.EFFECTIVE,
+                                Side.RIGHT);
+                SetOfPlannedExerciseVO set4 = new SetOfPlannedExerciseVO(2, 12, 0, 55.0f, SetType.EFFECTIVE,
+                                Side.LEFT);
+                PlannedExerciseVO exercise1 = new PlannedExerciseVO(1, createdExe.getIdExercise(), 2L, 1L,
+                                List.of(set1, set2, set3, set4));
+
+                SeanceTrackVO updatedSeanceVO = new SeanceTrackVO(
+                                LocalTime.of(10, 0),
+                                null,
+                                List.of(exercise1));
+
+                DayDataOfUserVO updatedDayVO = new DayDataOfUserVO(
+                                savedDay.getDayData(),
+                                savedDay.getPhysioTrack(),
+                                savedDay.getNutritionTrack(),
+                                updatedSeanceVO);
+
+                // Save updated
+                mockMvc.perform(post("/api/daydata/save")
+                                .header("Authorization", "Bearer " + tokenUser1)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(TestUtils.toJson(objectMapper, updatedDayVO)))
+                                .andExpect(status().isBadRequest());
+
+        }
+
+        @Test
+        void testWrongSetUnilateralForExerciseBilateral() throws Exception {
+                DayDataOfUserReturnDTO savedDay = createEmptyDayData();
+                ExerciseCreateDTO dto = TestUtils.buildExercise(
+                                "Pompes", "Exercise pectoraux",
+                                List.of(new MuscleInfo(1L, true), new MuscleInfo(2L, false)));
+                ExerciseDetailReturnDTO createdExe = TestUtils.createExercise(mockMvc, objectMapper, tokenUser1, dto);
+
+                // 2️⃣ Ajouter des exercices avec sets
+
+                SetOfPlannedExerciseVO set1 = new SetOfPlannedExerciseVO(1, 10, 0, 50.0f, SetType.EFFECTIVE, Side.LEFT);
+                SetOfPlannedExerciseVO set2 = new SetOfPlannedExerciseVO(1, 12, 0, 55.0f, SetType.EFFECTIVE,
+                                Side.RIGHT);
+                SetOfPlannedExerciseVO set3 = new SetOfPlannedExerciseVO(2, 12, 0, 55.0f, SetType.EFFECTIVE,
+                                Side.RIGHT);
+                SetOfPlannedExerciseVO set4 = new SetOfPlannedExerciseVO(2, 12, 0, 55.0f, SetType.EFFECTIVE,
+                                Side.LEFT);
+                PlannedExerciseVO exercise1 = new PlannedExerciseVO(1, createdExe.getIdExercise(), 1L, 1L,
+                                List.of(set1, set2, set3, set4));
+
+                SeanceTrackVO updatedSeanceVO = new SeanceTrackVO(
+                                LocalTime.of(10, 0),
+                                null,
+                                List.of(exercise1));
+
+                DayDataOfUserVO updatedDayVO = new DayDataOfUserVO(
+                                savedDay.getDayData(),
+                                savedDay.getPhysioTrack(),
+                                savedDay.getNutritionTrack(),
+                                updatedSeanceVO);
+
+                // Save updated
+                mockMvc.perform(post("/api/daydata/save")
+                                .header("Authorization", "Bearer " + tokenUser1)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(TestUtils.toJson(objectMapper, updatedDayVO)))
+                                .andExpect(status().isBadRequest());
+
+        }
+
+        @Test
+        void testSetUnilateralOnlyOneSet() throws Exception {
+                DayDataOfUserReturnDTO savedDay = createEmptyDayData();
+                ExerciseCreateDTO dto = TestUtils.buildExercise(
+                                "Pompes", "Exercise pectoraux",
+                                List.of(new MuscleInfo(1L, true), new MuscleInfo(2L, false)));
+                ExerciseDetailReturnDTO createdExe = TestUtils.createExercise(mockMvc, objectMapper, tokenUser1, dto);
+
+                // 2️⃣ Ajouter des exercices avec sets
+
+                SetOfPlannedExerciseVO set1 = new SetOfPlannedExerciseVO(1, 10, 0, 50.0f, SetType.EFFECTIVE, Side.LEFT);
+
+                PlannedExerciseVO exercise1 = new PlannedExerciseVO(1, createdExe.getIdExercise(), 2L, 1L,
+                                List.of(set1));
+
+                SeanceTrackVO updatedSeanceVO = new SeanceTrackVO(
+                                LocalTime.of(10, 0),
+                                null,
+                                List.of(exercise1));
+
+                DayDataOfUserVO updatedDayVO = new DayDataOfUserVO(
+                                savedDay.getDayData(),
+                                savedDay.getPhysioTrack(),
+                                savedDay.getNutritionTrack(),
+                                updatedSeanceVO);
+
+                // Save updated
+                mockMvc.perform(post("/api/daydata/save")
+                                .header("Authorization", "Bearer " + tokenUser1)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(TestUtils.toJson(objectMapper, updatedDayVO)))
+                                .andExpect(status().isCreated());
+
+        }
+
+        private DayDataOfUserReturnDTO createEmptyDayData() throws Exception {
+                DayDataOfUserVO dayDataVO = new DayDataOfUserVO(
+                                LocalDate.of(2025, 10, 10),
+                                new PhysioTrack(70.5f, 12000, 7.5f, "good"),
+                                new NutritionTrack(2500, 150, 70, 300, 30, 50),
+                                new SeanceTrackVO(LocalTime.of(10, 0), null, List.of()));
+
+                String response = mockMvc.perform(post("/api/daydata/save")
+                                .header("Authorization", "Bearer " + tokenUser1)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(TestUtils.toJson(objectMapper, dayDataVO)))
+                                .andExpect(status().isCreated())
+                                .andReturn().getResponse().getContentAsString();
+
+                DayDataOfUserReturnDTO savedDay = TestUtils.assertAndExtractData(
+                                response,
+                                "DataDay update Info",
+                                objectMapper,
+                                DayDataOfUserReturnDTO.class);
+
+                assertThat(savedDay).isNotNull();
+                assertThat(savedDay.getSeanceTrack()).isNotNull();
+                assertThat(savedDay.getSeanceTrack().getPlannedExercises()).isEmpty();
+
+                return savedDay;
+        }
+
 }

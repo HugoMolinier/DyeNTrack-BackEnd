@@ -14,6 +14,7 @@ import com.example.dyeTrack.core.entity.PlannedExercise;
 import com.example.dyeTrack.core.entity.PresetSeance;
 import com.example.dyeTrack.core.entity.SeanceTrack;
 import com.example.dyeTrack.core.entity.setOfPlannedExercise.SetOfPlannedExercise;
+import com.example.dyeTrack.core.entity.setOfPlannedExercise.SetOfPlannedExercise.Side;
 import com.example.dyeTrack.core.exception.ForbiddenException;
 import com.example.dyeTrack.core.port.in.SeanceTrackUseCase;
 import com.example.dyeTrack.core.port.out.DayDataOfUserPort;
@@ -116,7 +117,11 @@ public class SeanceTrackService implements SeanceTrackUseCase {
                 set.setSide(setVO.getSide());
 
                 plannedExercise.getSetsOfPlannedExercise().add(set);
+                if (setVO.getSide() != Side.BOTH && lateralite.getId() != 2L) { // si pas both et pas unilatéral
+                    throw new IllegalArgumentException(
+                            "Side " + setVO.getSide() + " non adapté à  " + lateralite.getNameFR());
 
+                }
                 verifySide(orderRecurenceSide, setVO.getSetOrder(), setVO.getSide());
             }
 
