@@ -81,12 +81,22 @@ public class SeanceTrackService implements SeanceTrackUseCase {
         if (seanceTrack.getPlannedExercises() == null) {
             seanceTrack.setPlannedExercises(new ArrayList<>());
         }
-        seanceTrack.getPlannedExercises().clear();
-        // 🧩 2. Ajouter les nouveaux exercices à la séance
+        Map<Long, PlannedExercise> exerciseMapAlreadyExist = new HashMap<>();
+        seanceTrack.getPlannedExercises()
+                .forEach(it -> exerciseMapAlreadyExist.put(it.getExercise().getIdExercise(), it));
+        List<PlannedExercise> finalExercises = new ArrayList<>();
         for (PlannedExerciseVO exerciseVO : vo.getPlannedExercises()) {
-            PlannedExercise plannedExercise = new PlannedExercise();
+
+            PlannedExercise plannedExercise = exerciseMapAlreadyExist.get(exerciseVO.getExerciseId());
+            if (plannedExercise == null) {
+                plannedExercise = new PlannedExercise();
+                plannedExercise.setExercise(EntityUtils.getExerciseOrThrow(exerciseVO.getExerciseId(), exercisePort));
+                plannedExercise.setSeanceTrack(seanceTrack);
+                plannedExercise.setSetsOfPlannedExercise(new ArrayList<>());
+
+            }
+
             plannedExercise.setExerciseOrder(exerciseVO.getExerciseOrder());
-            plannedExercise.setExercise(EntityUtils.getExerciseOrThrow(exerciseVO.getExerciseId(), exercisePort));
             Lateralite lateralite = lateralites.stream()
                     .filter(l -> l.getId().equals(exerciseVO.getLateraliteId()))
                     .findFirst()
@@ -99,35 +109,55 @@ public class SeanceTrackService implements SeanceTrackUseCase {
                     .orElseThrow(() -> new IllegalArgumentException(
                             "Equipment ID " + exerciseVO.getEquipmentId() + " invalide"));
 
+            if (lateralite != plannedExercise.getLateralite()) {
+                plannedExercise.setSetsOfPlannedExercise(new ArrayList<>());
+            }
             plannedExercise.setLateralite(lateralite);
             plannedExercise.setEquipment(equipment);
-            plannedExercise.setSeanceTrack(seanceTrack);
 
             // 🔁 Ajouter les sets liés à cet exercice
             Map<Integer, List<SetOfPlannedExercise.Side>> orderRecurenceSide = new HashMap<>();
-            for (SetOfPlannedExerciseVO setVO : exerciseVO.getSets()) {
-                SetOfPlannedExercise set = new SetOfPlannedExercise();
 
-                set.setSetOrder(setVO.getSetOrder());
+            Map<String, SetOfPlannedExercise> setMapAlreadyExist = new HashMap<>();
+            plannedExercise.getSetsOfPlannedExercise()
+                    .forEach(it -> setMapAlreadyExist.put(it.getSetOrder() + "_" + it.getSide(), it));
+            List<SetOfPlannedExercise> finalSets = new ArrayList<>();
+
+            // 3️⃣ Parcourir les sets du VO
+            for (SetOfPlannedExerciseVO setVO : exerciseVO.getSets()) {
+                SetOfPlannedExercise set = setMapAlreadyExist.get(setVO.getSetOrder() + "_" + setVO.getSide());
+                if (set == null) {
+                    set = new SetOfPlannedExercise();
+                    set.setSetOrder(setVO.getSetOrder());
+                    set.setPlannedExercise(plannedExercise);
+                    set.setSide(setVO.getSide());
+                }
+
                 set.setRepsNumber(setVO.getRepsNumber());
                 set.setRir(setVO.getRir());
                 set.setCharge(setVO.getCharge());
                 set.setTypeOfSet(setVO.getTypeOfSet());
-                set.setPlannedExercise(plannedExercise);
-                set.setSide(setVO.getSide());
 
-                plannedExercise.getSetsOfPlannedExercise().add(set);
-                if (setVO.getSide() != Side.BOTH && lateralite.getId() != 2L) { // si pas both et pas unilatéral
+                if (setVO.getSide() != Side.BOTH && lateralite.getId() != 2L) {
                     throw new IllegalArgumentException(
                             "Side " + setVO.getSide() + " non adapté à  " + lateralite.getNameFR());
-
                 }
                 verifySide(orderRecurenceSide, setVO.getSetOrder(), setVO.getSide());
+                finalSets.add(set);
             }
+            plannedExercise.setSetsOfPlannedExercise(finalSets);
 
-            seanceTrack.getPlannedExercises().add(plannedExercise);
+            finalExercises.add(plannedExercise);
         }
+        List<PlannedExercise> existingExercises = seanceTrack.getPlannedExercises();
+
+        // Vide la collection existante (Hibernate gérera les orphelins)
+        existingExercises.clear();
+
+        // Ajoute tous les exercices actuels
+        existingExercises.addAll(finalExercises);
         return seanceTrackPort.save(seanceTrack);
+
     }
 
     @Transactional

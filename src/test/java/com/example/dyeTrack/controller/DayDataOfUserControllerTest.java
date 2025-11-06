@@ -258,11 +258,16 @@ public class DayDataOfUserControllerTest {
                                 response,
                                 "DataDay update Info",
                                 objectMapper,
-                                DayDataOfUser.class);
+                                DayDataOfUserReturnDTO.class);
 
                 assertThat(reorderedDay.getSeanceTrack().getPlannedExercises()).hasSize(2);
-                assertThat(reorderedDay.getSeanceTrack().getPlannedExercises().get(0).getExerciseOrder()).isEqualTo(1);
                 assertThat(reorderedDay.getSeanceTrack().getPlannedExercises().get(1).getExerciseOrder()).isEqualTo(2);
+                assertThat(reorderedDay.getSeanceTrack().getPlannedExercises().get(1).getExerciseId())
+                                .isEqualTo(createdExe.getIdExercise());
+                assertThat(reorderedDay.getSeanceTrack().getPlannedExercises().get(0).getExerciseOrder()).isEqualTo(1);
+                assertThat(reorderedDay.getSeanceTrack().getPlannedExercises().get(0).getExerciseId())
+                                .isEqualTo(createdExe2.getIdExercise());
+
         }
 
         @Test
@@ -622,6 +627,277 @@ public class DayDataOfUserControllerTest {
                 assertThat(savedDay.getSeanceTrack().getPlannedExercises()).isEmpty();
 
                 return savedDay;
+        }
+
+        @Test
+        void testUpdateSetValues() throws Exception {
+                DayDataOfUserReturnDTO savedDay = createEmptyDayData();
+
+                // Créer un exercice
+                ExerciseCreateDTO dto = TestUtils.buildExercise("Développé couché", "Pectoraux",
+                                List.of(new MuscleInfo(1L, true)));
+                ExerciseDetailReturnDTO createdExe = TestUtils.createExercise(mockMvc, objectMapper, tokenUser1, dto);
+
+                // Sets initiaux
+                SetOfPlannedExerciseVO set1 = new SetOfPlannedExerciseVO(1, 10, 0, 50f, SetType.EFFECTIVE, Side.BOTH);
+                SetOfPlannedExerciseVO set2 = new SetOfPlannedExerciseVO(2, 12, 0, 55f, SetType.EFFECTIVE, Side.BOTH);
+
+                PlannedExerciseVO exercise = new PlannedExerciseVO(1, createdExe.getIdExercise(), 1L, 1L,
+                                List.of(set1, set2));
+                SeanceTrackVO seanceVO = new SeanceTrackVO(LocalTime.of(10, 0), null, List.of(exercise));
+                DayDataOfUserVO dayVO = new DayDataOfUserVO(savedDay.getDayData(), savedDay.getPhysioTrack(),
+                                savedDay.getNutritionTrack(), seanceVO);
+
+                DayDataOfUserReturnDTO updatedDay = TestUtils.createDayData(mockMvc, objectMapper, tokenUser1, dayVO);
+
+                // Vérifier valeurs initiales
+                assertThat(updatedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(0).getRepsNumber())
+                                .isEqualTo(10);
+                assertThat(updatedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(0).getCharge())
+                                .isEqualTo(50f);
+                assertThat(updatedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(0).getSide())
+                                .isEqualTo(Side.BOTH);
+
+                assertThat(updatedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(1).getRepsNumber())
+                                .isEqualTo(12);
+                assertThat(updatedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(1).getCharge())
+                                .isEqualTo(55f);
+                assertThat(updatedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(1).getSide())
+                                .isEqualTo(Side.BOTH);
+
+                // Modifier les valeurs du set (sans changer setOrder)
+                SetOfPlannedExerciseVO modifiedSet1 = new SetOfPlannedExerciseVO(1, 15, 2, 60f, SetType.WARMUP,
+                                Side.BOTH);
+                SetOfPlannedExerciseVO modifiedSet2 = new SetOfPlannedExerciseVO(2, 18, 1, 65f, SetType.WARMUP,
+                                Side.BOTH);
+
+                PlannedExerciseVO modifiedExercise = new PlannedExerciseVO(1, createdExe.getIdExercise(), 1L, 1L,
+                                List.of(modifiedSet1, modifiedSet2));
+                SeanceTrackVO modifiedSeanceVO = new SeanceTrackVO(LocalTime.of(10, 0), null,
+                                List.of(modifiedExercise));
+                DayDataOfUserVO modifiedDayVO = new DayDataOfUserVO(savedDay.getDayData(), savedDay.getPhysioTrack(),
+                                savedDay.getNutritionTrack(), modifiedSeanceVO);
+
+                DayDataOfUserReturnDTO modifiedDay = TestUtils.createDayData(mockMvc, objectMapper, tokenUser1,
+                                modifiedDayVO);
+
+                // Vérifier que les valeurs ont été mises à jour correctement
+                assertThat(modifiedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().size())
+                                .isEqualTo(2);
+                assertThat(modifiedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(0).getSetOrder())
+                                .isEqualTo(1);
+                assertThat(modifiedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(0).getRepsNumber())
+                                .isEqualTo(15);
+                assertThat(modifiedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(0).getRir())
+                                .isEqualTo(2);
+                assertThat(modifiedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(0).getCharge())
+                                .isEqualTo(60f);
+                assertThat(modifiedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(0).getTypeOfSet())
+                                .isEqualTo(SetType.WARMUP);
+                assertThat(modifiedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(0).getSide())
+                                .isEqualTo(Side.BOTH);
+
+                assertThat(modifiedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(1).getSetOrder())
+                                .isEqualTo(2);
+                assertThat(modifiedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(1).getRepsNumber())
+                                .isEqualTo(18);
+                assertThat(modifiedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(1).getRir())
+                                .isEqualTo(1);
+                assertThat(modifiedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(1).getCharge())
+                                .isEqualTo(65f);
+                assertThat(modifiedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(1).getTypeOfSet())
+                                .isEqualTo(SetType.WARMUP);
+                assertThat(modifiedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(1).getSide())
+                                .isEqualTo(Side.BOTH);
+        }
+
+        @Test
+        void testChangeLateraliteBothToSideAndBack() throws Exception {
+                DayDataOfUserReturnDTO savedDay = createEmptyDayData();
+
+                ExerciseCreateDTO dto = TestUtils.buildExercise("Squat", "Jambes", List.of(new MuscleInfo(3L, true)));
+                ExerciseDetailReturnDTO createdExe = TestUtils.createExercise(mockMvc, objectMapper, tokenUser1, dto);
+
+                // Set initial BOTH
+                SetOfPlannedExerciseVO setBoth = new SetOfPlannedExerciseVO(1, 10, 0, 50f, SetType.EFFECTIVE,
+                                Side.BOTH);
+                PlannedExerciseVO exercise = new PlannedExerciseVO(1, createdExe.getIdExercise(), 1L, 1L,
+                                List.of(setBoth));
+                SeanceTrackVO seanceVO = new SeanceTrackVO(LocalTime.of(10, 0), null, List.of(exercise));
+                DayDataOfUserVO dayVO = new DayDataOfUserVO(savedDay.getDayData(), savedDay.getPhysioTrack(),
+                                savedDay.getNutritionTrack(), seanceVO);
+
+                DayDataOfUserReturnDTO updatedDay = TestUtils.createDayData(mockMvc, objectMapper, tokenUser1, dayVO);
+                assertThat(updatedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(0).getSide())
+                                .isEqualTo(Side.BOTH);
+
+                // BOTH -> LEFT
+                SetOfPlannedExerciseVO setLeft = new SetOfPlannedExerciseVO(1, 10, 0, 50f, SetType.EFFECTIVE,
+                                Side.LEFT);
+
+                exercise.setSets(List.of(setLeft));
+                exercise.setLateraliteId(2L);
+                SeanceTrackVO leftSeanceVO = new SeanceTrackVO(LocalTime.of(10, 0), null, List.of(exercise));
+                DayDataOfUserVO leftDayVO = new DayDataOfUserVO(savedDay.getDayData(), savedDay.getPhysioTrack(),
+                                savedDay.getNutritionTrack(), leftSeanceVO);
+
+                DayDataOfUserReturnDTO leftDay = TestUtils.createDayData(mockMvc, objectMapper, tokenUser1, leftDayVO);
+                assertThat(leftDay.getSeanceTrack().getPlannedExercises().get(0).getSets().size()).isEqualTo(1);
+                assertThat(leftDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(0).getSide())
+                                .isEqualTo(Side.LEFT);
+
+                // LEFT +RIGHT
+                SetOfPlannedExerciseVO setRight = new SetOfPlannedExerciseVO(1, 10, 0, 50f, SetType.EFFECTIVE,
+                                Side.RIGHT);
+
+                exercise.setSets(List.of(setLeft, setRight));
+                exercise.setLateraliteId(2L);
+                SeanceTrackVO leftRightSeanceVO = new SeanceTrackVO(LocalTime.of(10, 0), null, List.of(exercise));
+                DayDataOfUserVO leftRightDayVO = new DayDataOfUserVO(savedDay.getDayData(), savedDay.getPhysioTrack(),
+                                savedDay.getNutritionTrack(), leftRightSeanceVO);
+
+                DayDataOfUserReturnDTO leftRightDay = TestUtils.createDayData(mockMvc, objectMapper, tokenUser1,
+                                leftRightDayVO);
+                assertThat(leftRightDay.getSeanceTrack().getPlannedExercises().size()).isEqualTo(1);
+                assertThat(leftRightDay.getSeanceTrack().getPlannedExercises().get(0).getSets().size()).isEqualTo(2);
+                assertThat(leftRightDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(0).getSide())
+                                .isEqualTo(Side.LEFT);
+
+                // LEFT -> BOTH
+                exercise.setSets(List.of(setBoth));
+                exercise.setLateraliteId(1L);
+                SeanceTrackVO bothAgainVO = new SeanceTrackVO(LocalTime.of(10, 0), null, List.of(exercise));
+                DayDataOfUserVO bothAgainDayVO = new DayDataOfUserVO(savedDay.getDayData(), savedDay.getPhysioTrack(),
+                                savedDay.getNutritionTrack(), bothAgainVO);
+
+                DayDataOfUserReturnDTO bothAgainDay = TestUtils.createDayData(mockMvc, objectMapper, tokenUser1,
+                                bothAgainDayVO);
+                assertThat(bothAgainDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(0).getSide())
+                                .isEqualTo(Side.BOTH);
+        }
+
+        @Test
+        void testChangeSetCount_TwoToOneToTwo() throws Exception {
+                DayDataOfUserReturnDTO savedDay = createEmptyDayData();
+
+                ExerciseCreateDTO dto = TestUtils.buildExercise(
+                                "Développé couché", "Pectoraux",
+                                List.of(new MuscleInfo(1L, true)));
+                ExerciseDetailReturnDTO createdExe = TestUtils.createExercise(mockMvc, objectMapper, tokenUser1, dto);
+
+                // --- 1️⃣ Initial : 2 sets ---
+                SetOfPlannedExerciseVO set1 = new SetOfPlannedExerciseVO(1, 10, 0, 50f, SetType.EFFECTIVE, Side.BOTH);
+                SetOfPlannedExerciseVO set2 = new SetOfPlannedExerciseVO(2, 12, 0, 55f, SetType.EFFECTIVE, Side.BOTH);
+
+                PlannedExerciseVO exercise = new PlannedExerciseVO(
+                                1, createdExe.getIdExercise(), 1L, 1L, List.of(set1, set2));
+                SeanceTrackVO seanceVO = new SeanceTrackVO(LocalTime.of(10, 0), null, List.of(exercise));
+                DayDataOfUserVO dayVO = new DayDataOfUserVO(savedDay.getDayData(),
+                                savedDay.getPhysioTrack(), savedDay.getNutritionTrack(), seanceVO);
+
+                DayDataOfUserReturnDTO updatedDay = TestUtils.createDayData(mockMvc, objectMapper, tokenUser1, dayVO);
+
+                assertThat(updatedDay.getSeanceTrack().getPlannedExercises().get(0).getSets().size())
+                                .isEqualTo(2);
+
+                // --- 2️⃣ Update : passer à 1 set ---
+                PlannedExerciseVO exerciseOneSet = new PlannedExerciseVO(1, createdExe.getIdExercise(), 1L, 1L,
+                                List.of(set1));
+
+                SeanceTrackVO seanceOneSet = new SeanceTrackVO(LocalTime.of(10, 0), null, List.of(exerciseOneSet));
+                DayDataOfUserVO oneSetDayVO = new DayDataOfUserVO(savedDay.getDayData(),
+                                savedDay.getPhysioTrack(), savedDay.getNutritionTrack(), seanceOneSet);
+
+                DayDataOfUserReturnDTO oneSetDay = TestUtils.createDayData(mockMvc, objectMapper, tokenUser1,
+                                oneSetDayVO);
+
+                assertThat(oneSetDay.getSeanceTrack().getPlannedExercises().get(0).getSets().size())
+                                .isEqualTo(1);
+
+                assertThat(oneSetDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(0).getSetOrder())
+                                .isEqualTo(1);
+
+                // --- 3️⃣ Repasse à 2 sets ---
+                PlannedExerciseVO exerciseTwoSetsAgain = new PlannedExerciseVO(1, createdExe.getIdExercise(), 1L, 1L,
+                                List.of(set1, set2));
+
+                SeanceTrackVO seanceTwoAgain = new SeanceTrackVO(LocalTime.of(10, 0), null,
+                                List.of(exerciseTwoSetsAgain));
+                DayDataOfUserVO twoSetsAgainVO = new DayDataOfUserVO(savedDay.getDayData(),
+                                savedDay.getPhysioTrack(), savedDay.getNutritionTrack(), seanceTwoAgain);
+
+                DayDataOfUserReturnDTO twoSetsAgainDay = TestUtils.createDayData(mockMvc, objectMapper, tokenUser1,
+                                twoSetsAgainVO);
+
+                assertThat(twoSetsAgainDay.getSeanceTrack().getPlannedExercises().get(0).getSets().size())
+                                .isEqualTo(2);
+
+                assertThat(twoSetsAgainDay.getSeanceTrack().getPlannedExercises().get(0).getSets().get(0).getSetOrder())
+                                .isEqualTo(1);
+        }
+
+        @Test
+        void testChangeExerciseCount_TwoToOneToTwo() throws Exception {
+                DayDataOfUserReturnDTO savedDay = createEmptyDayData();
+
+                // Création de deux exercices
+                ExerciseCreateDTO dto1 = TestUtils.buildExercise("Développé couché", "Pectoraux",
+                                List.of(new MuscleInfo(1L, true)));
+                ExerciseCreateDTO dto2 = TestUtils.buildExercise("Squat", "Jambes",
+                                List.of(new MuscleInfo(3L, true)));
+
+                ExerciseDetailReturnDTO createdExe1 = TestUtils.createExercise(mockMvc, objectMapper, tokenUser1, dto1);
+                ExerciseDetailReturnDTO createdExe2 = TestUtils.createExercise(mockMvc, objectMapper, tokenUser1, dto2);
+
+                // --- 1️⃣ Initial : 2 exercices ---
+                SetOfPlannedExerciseVO set1 = new SetOfPlannedExerciseVO(1, 10, 0, 50f, SetType.EFFECTIVE, Side.BOTH);
+
+                PlannedExerciseVO exercise1 = new PlannedExerciseVO(1, createdExe1.getIdExercise(), 1L, 1L,
+                                List.of(set1));
+                PlannedExerciseVO exercise2 = new PlannedExerciseVO(2, createdExe2.getIdExercise(), 2L, 1L,
+                                List.of(set1));
+
+                SeanceTrackVO seanceVO = new SeanceTrackVO(LocalTime.of(10, 0), null, List.of(exercise1, exercise2));
+                DayDataOfUserVO dayVO = new DayDataOfUserVO(savedDay.getDayData(),
+                                savedDay.getPhysioTrack(), savedDay.getNutritionTrack(), seanceVO);
+
+                DayDataOfUserReturnDTO updatedDay = TestUtils.createDayData(mockMvc, objectMapper, tokenUser1, dayVO);
+                assertThat(updatedDay.getSeanceTrack().getPlannedExercises().size()).isEqualTo(2);
+                Long idPlanned = updatedDay.getSeanceTrack().getPlannedExercises().get(0).getId();
+
+                // --- 2️⃣ Update : passer à 1 exercice (suppression du 2ème) ---
+                PlannedExerciseVO onlyExercise1 = new PlannedExerciseVO(1, createdExe1.getIdExercise(), 1L, 1L,
+                                List.of(set1));
+
+                SeanceTrackVO seanceOneExercise = new SeanceTrackVO(LocalTime.of(10, 0), null, List.of(onlyExercise1));
+                DayDataOfUserVO oneExerciseDayVO = new DayDataOfUserVO(savedDay.getDayData(),
+                                savedDay.getPhysioTrack(), savedDay.getNutritionTrack(), seanceOneExercise);
+
+                DayDataOfUserReturnDTO oneExerciseDay = TestUtils.createDayData(mockMvc, objectMapper, tokenUser1,
+                                oneExerciseDayVO);
+                assertThat(oneExerciseDay.getSeanceTrack().getPlannedExercises().size()).isEqualTo(1);
+                assertThat(oneExerciseDay.getSeanceTrack().getPlannedExercises().get(0).getExerciseId())
+                                .isEqualTo(createdExe1.getIdExercise());
+                assertThat(oneExerciseDay.getSeanceTrack().getPlannedExercises().get(0).getId())
+                                .isEqualTo(idPlanned);
+                // --- 3️⃣ Repasse à 2 exercices (réajout du 2ème) ---
+                PlannedExerciseVO twoExercisesAgain1 = new PlannedExerciseVO(1, createdExe1.getIdExercise(), 1L, 1L,
+                                List.of(set1));
+                PlannedExerciseVO twoExercisesAgain2 = new PlannedExerciseVO(2, createdExe2.getIdExercise(), 2L, 1L,
+                                List.of(set1));
+
+                SeanceTrackVO seanceTwoAgain = new SeanceTrackVO(LocalTime.of(10, 0), null,
+                                List.of(twoExercisesAgain1, twoExercisesAgain2));
+                DayDataOfUserVO twoExercisesAgainVO = new DayDataOfUserVO(savedDay.getDayData(),
+                                savedDay.getPhysioTrack(), savedDay.getNutritionTrack(), seanceTwoAgain);
+
+                DayDataOfUserReturnDTO twoExercisesAgainDay = TestUtils.createDayData(mockMvc, objectMapper, tokenUser1,
+                                twoExercisesAgainVO);
+                assertThat(twoExercisesAgainDay.getSeanceTrack().getPlannedExercises().size()).isEqualTo(2);
+                assertThat(twoExercisesAgainDay.getSeanceTrack().getPlannedExercises().get(0).getExerciseId())
+                                .isEqualTo(createdExe1.getIdExercise());
+                assertThat(twoExercisesAgainDay.getSeanceTrack().getPlannedExercises().get(1).getExerciseId())
+                                .isEqualTo(createdExe2.getIdExercise());
         }
 
 }
