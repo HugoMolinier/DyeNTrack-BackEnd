@@ -2,6 +2,7 @@ package com.example.dyeTrack.in.user.dto;
 
 import com.example.dyeTrack.core.valueobject.AuthValue;
 
+import com.example.dyeTrack.core.valueobject.TokenVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class ReturnUserTokenDTO {
@@ -9,10 +10,10 @@ public class ReturnUserTokenDTO {
     private UserDTO userDTO;
 
     @Schema(description = "Token JWT de l'utilisateur", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
-    private String token;
+    private TokenVO token;
 
     // Constructeur principa
-    public ReturnUserTokenDTO(UserDTO userDTO, String token) {
+    public ReturnUserTokenDTO(UserDTO userDTO, TokenVO token) {
         this.userDTO = userDTO;
         this.token = token;
     }
@@ -30,7 +31,7 @@ public class ReturnUserTokenDTO {
         return userDTO;
     }
 
-    public String getToken() {
+    public TokenVO getToken() {
         return token;
     }
 }

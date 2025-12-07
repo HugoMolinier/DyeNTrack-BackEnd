@@ -143,7 +143,7 @@ public class TestUtils {
             MockMvc mockMvc,
             ObjectMapper objectMapper,
             String inte) throws Exception {
-        return registerUser(mockMvc, objectMapper, "Hugo", "hugo@test" + inte + ".com", "password").getToken();
+        return registerUser(mockMvc, objectMapper, "Hugo", "hugo@test" + inte + ".com", "password").getToken().getToken();
     }
 
     public static String registerAndGetToken(
@@ -173,7 +173,7 @@ public class TestUtils {
         assertThat(userOpt).isPresent();
 
         var user = userOpt.get();
-        Long extractedUserId = jwtService.extractUserId(returned.getToken());
+        Long extractedUserId = jwtService.extractUserId(returned.getToken().getToken());
         assertThat(extractedUserId).isEqualTo(user.getId());
         assertThat(returned.getUserDTO().getPseudo()).isEqualTo(pseudo);
         assertThat(user.getPseudo()).isEqualTo(pseudo);

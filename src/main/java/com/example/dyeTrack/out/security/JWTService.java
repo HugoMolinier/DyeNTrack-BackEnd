@@ -1,5 +1,6 @@
 package com.example.dyeTrack.out.security;
 
+import com.example.dyeTrack.core.valueobject.TokenVO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -33,16 +34,24 @@ public class JWTService implements JwtServicePort {
      * @param userId l'identifiant unique de l'utilisateur
      * @return le JWT en String
      */
-    public String generateToken(Long userId) {
+    public TokenVO generateToken(Long userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
-        return Jwts.builder()
+        long expirationMillis = 1000L * 60 * 60 * 24 * 30;
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + expirationMillis);
+
+
+        String token =  Jwts.builder()
                 .setClaims(claims)
                 .setSubject(String.valueOf(userId))
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 30)) // 30j
+                .setIssuedAt(now)
+                .setExpiration(expiryDate) // 30j
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
+        int expireInSeconds = (int) (expirationMillis / 1000);
+
+        return new TokenVO(token, expireInSeconds, "Bearer");
     }
 
     private Key getKey() {
