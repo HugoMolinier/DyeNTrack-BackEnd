@@ -151,10 +151,7 @@ public class SeanceTrackService implements SeanceTrackUseCase {
         }
         List<PlannedExercise> existingExercises = seanceTrack.getPlannedExercises();
 
-        // Vide la collection existante (Hibernate gérera les orphelins)
         existingExercises.clear();
-
-        // Ajoute tous les exercices actuels
         existingExercises.addAll(finalExercises);
         return seanceTrackPort.save(seanceTrack);
 
