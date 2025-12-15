@@ -1,5 +1,6 @@
 package com.example.dyeTrack.core.service;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -124,6 +125,7 @@ public class DayDataOfUserService implements DayDataOfUserUseCase {
             dayDataOfUser.setSeanceTrack(updatedSeance);
         }
 
+        dayDataOfUser.setLastUpdate(Instant.now());
         return dayDataOfUserPort.save(dayDataOfUser);
     }
 }

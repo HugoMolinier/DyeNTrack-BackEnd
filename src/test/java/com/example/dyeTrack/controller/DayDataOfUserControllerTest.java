@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -865,8 +866,9 @@ public class DayDataOfUserControllerTest {
 
                 DayDataOfUserReturnDTO updatedEmpty = TestUtils.createDayData(mockMvc, objectMapper, tokenUser1,
                                 dayEmptyVO);
-
+                Instant lastUpdate =   updatedEmpty.getLastUpdate();
                 assertThat(updatedEmpty.getSeanceTrack().getPlannedExercises()).isEmpty();
+                assertThat(lastUpdate != null);
 
                 // --- 3️⃣ Ajout exercice (sans set) ---
                 SeanceTrackVO seanceOneExercise = new SeanceTrackVO(
@@ -884,6 +886,8 @@ public class DayDataOfUserControllerTest {
                 assertThat(oneExerciseDay.getSeanceTrack().getPlannedExercises().size()).isEqualTo(1);
                 assertThat(oneExerciseDay.getSeanceTrack().getPlannedExercises().get(0).getSets()).isEmpty();
 
+                assertThat(lastUpdate != oneExerciseDay.getLastUpdate());
+                lastUpdate=oneExerciseDay.getLastUpdate();
                 // --- 4️⃣ Ajout d’un set ---
                 PlannedExerciseVO exercise1WithSet = new PlannedExerciseVO(1, createdExe1.getIdExercise(), 1L, 1L,
                                 List.of(set1));
@@ -900,6 +904,8 @@ public class DayDataOfUserControllerTest {
                 DayDataOfUserReturnDTO oneExerciseDayOneSet = TestUtils.createDayData(mockMvc, objectMapper, tokenUser1,
                                 oneExerciseOneSetVO);
 
+                assertThat(lastUpdate != oneExerciseDayOneSet.getLastUpdate());
+                lastUpdate=oneExerciseDayOneSet.getLastUpdate();
                 assertThat(oneExerciseDayOneSet.getSeanceTrack().getPlannedExercises().get(0).getSets().size())
                                 .isEqualTo(1);
 
@@ -926,7 +932,8 @@ public class DayDataOfUserControllerTest {
 
                 assertThat(oneExerciseDayLatChanged.getSeanceTrack().getPlannedExercises().get(0).getLateraliteId())
                                 .isEqualTo(2L);
-
+                assertThat(lastUpdate != oneExerciseDayLatChanged.getLastUpdate());
+                assertThat(lastUpdate != null);
         }
 
 }
