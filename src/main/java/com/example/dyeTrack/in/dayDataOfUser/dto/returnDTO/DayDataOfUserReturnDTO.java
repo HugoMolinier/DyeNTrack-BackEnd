@@ -1,5 +1,6 @@
 package com.example.dyeTrack.in.dayDataOfUser.dto.returnDTO;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 import com.example.dyeTrack.core.entity.DayDataOfUser;
@@ -14,6 +15,8 @@ public class DayDataOfUserReturnDTO {
     private NutritionTrack nutritionTrack;
     private SeanceTrackReturnDTO seanceTrack;
 
+    private Instant lastUpdate;
+
     public DayDataOfUserReturnDTO() {
     }
 
@@ -25,6 +28,7 @@ public class DayDataOfUserReturnDTO {
         if (dataOfUser.getSeanceTrack() != null) {
             this.seanceTrack = new SeanceTrackReturnDTO(dataOfUser.getSeanceTrack());
         }
+        this.lastUpdate = dataOfUser.getLastUpdate();
     }
 
     // Getters et Setters
@@ -66,5 +70,13 @@ public class DayDataOfUserReturnDTO {
 
     public void setSeanceTrack(SeanceTrackReturnDTO seanceTrack) {
         this.seanceTrack = seanceTrack;
+    }
+
+    public void setLastUpdate(Instant lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public Instant getLastUpdate() {
+        return lastUpdate;
     }
 }

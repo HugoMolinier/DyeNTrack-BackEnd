@@ -1,20 +1,11 @@
 package com.example.dyeTrack.core.entity;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "idUser", "dayData" }))
@@ -34,6 +25,9 @@ public class DayDataOfUser {
 
     @OneToOne(mappedBy = "dataOfUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private PhysioTrack physioTrack;
+
+    @Column(nullable = false)
+    private Instant lastUpdate;
 
     public PhysioTrack getPhysioTrack() {
         return physioTrack;
@@ -92,5 +86,19 @@ public class DayDataOfUser {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Instant getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Instant lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    @PrePersist
+    @PreUpdate
+    public void updateTimestamp() {
+        this.lastUpdate = Instant.now();
     }
 }
