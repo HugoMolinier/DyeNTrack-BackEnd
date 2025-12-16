@@ -47,7 +47,7 @@ public class PlannedExercise {
     @JoinColumn(name = "equipment_id", nullable = false)
     private Equipment equipment;
 
-    @OneToMany(mappedBy = "plannedExercise", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "plannedExercise", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<SetOfPlannedExercise> setsOfPlannedExercise = new ArrayList<>();
 
     // --- Getter & Setter pour la liste ---

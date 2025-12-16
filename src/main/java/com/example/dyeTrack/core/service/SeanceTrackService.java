@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -81,9 +82,11 @@ public class SeanceTrackService implements SeanceTrackUseCase {
         if (seanceTrack.getPlannedExercises() == null) {
             seanceTrack.setPlannedExercises(new ArrayList<>());
         }
-        Map<Long, PlannedExercise> exerciseMapAlreadyExist = new HashMap<>();
-        seanceTrack.getPlannedExercises()
-                .forEach(it -> exerciseMapAlreadyExist.put(it.getExercise().getIdExercise(), it));
+        Map<Long, PlannedExercise> exerciseMapAlreadyExist = seanceTrack.getPlannedExercises().stream()
+                .collect(Collectors.toMap(
+                        pe -> pe.getExercise().getIdExercise(),
+                        pe -> pe
+                ));
         List<PlannedExercise> finalExercises = new ArrayList<>();
         for (PlannedExerciseVO exerciseVO : vo.getPlannedExercises()) {
 
@@ -110,7 +113,7 @@ public class SeanceTrackService implements SeanceTrackUseCase {
                             "Equipment ID " + exerciseVO.getEquipmentId() + " invalide"));
 
             if (lateralite != plannedExercise.getLateralite()) {
-                plannedExercise.setSetsOfPlannedExercise(new ArrayList<>());
+                plannedExercise.getSetsOfPlannedExercise().clear();
             }
             plannedExercise.setLateralite(lateralite);
             plannedExercise.setEquipment(equipment);
@@ -118,9 +121,11 @@ public class SeanceTrackService implements SeanceTrackUseCase {
             // 🔁 Ajouter les sets liés à cet exercice
             Map<Integer, List<SetOfPlannedExercise.Side>> orderRecurenceSide = new HashMap<>();
 
-            Map<String, SetOfPlannedExercise> setMapAlreadyExist = new HashMap<>();
-            plannedExercise.getSetsOfPlannedExercise()
-                    .forEach(it -> setMapAlreadyExist.put(it.getSetOrder() + "_" + it.getSide(), it));
+            Map<String, SetOfPlannedExercise> setMapAlreadyExist = plannedExercise.getSetsOfPlannedExercise().stream()
+                    .collect(Collectors.toMap(
+                            s -> s.getSetOrder() + "_" + s.getSide(),
+                            s -> s
+                    ));
             List<SetOfPlannedExercise> finalSets = new ArrayList<>();
 
             // 3️⃣ Parcourir les sets du VO
@@ -145,14 +150,14 @@ public class SeanceTrackService implements SeanceTrackUseCase {
                 verifySide(orderRecurenceSide, setVO.getSetOrder(), setVO.getSide());
                 finalSets.add(set);
             }
-            plannedExercise.setSetsOfPlannedExercise(finalSets);
+            List<SetOfPlannedExercise> existingSets = plannedExercise.getSetsOfPlannedExercise();
+            existingSets.clear();
+            existingSets.addAll(finalSets);
 
             finalExercises.add(plannedExercise);
         }
-        List<PlannedExercise> existingExercises = seanceTrack.getPlannedExercises();
-
-        existingExercises.clear();
-        existingExercises.addAll(finalExercises);
+        seanceTrack.getPlannedExercises().clear();
+        seanceTrack.getPlannedExercises().addAll(finalExercises);
         return seanceTrackPort.save(seanceTrack);
 
     }
