@@ -65,4 +65,23 @@ public class UserController {
                         dto.getSexeMale()));
         return ResponseBuilder.created(response, "Utilisateur créé avec succès");
     }
+
+
+    @PutMapping("/update")
+    @SecurityRequirement(name = "bearerAuth")
+    @Operation(summary = "Update User Information", description = "Update Connected User information exclude id and email", security = @SecurityRequirement(name = "bearerAuth"))
+    public ResponseEntity<ResponseBuilder.ResponseDTO<UserDTO>> update(
+            @RequestBody @Valid UserDTO dto) {
+
+        Long idTokenUser = SecurityUtil.getUserIdFromContext();
+        UserDTO response = new UserDTO(
+                service.update(
+                        idTokenUser,
+                        dto.getPseudo(),
+                        dto.getBirthdate(),
+                        dto.getHeight(),
+                        dto.getSexeMale()));
+        return ResponseBuilder.success(response, "Info Utilisateur mis à jour avec succès");
+    }
+
 }

@@ -13,11 +13,13 @@ import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -167,5 +169,55 @@ class UserControllerIntegrationTest {
         mockMvc.perform(get("/api/user/getUserConnected")
                 .header("Authorization", "Bearer invalid-token"))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void testUpdate_success() throws Exception {
+        String token = TestUtils.registerAndGetToken(mockMvc, objectMapper);
+
+        String response = mockMvc.perform(get("/api/user/getUserConnected")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        UserDTO userDTO = TestUtils.assertAndExtractData(
+                response,
+                "Utilisateur récupéré avec succès",
+                objectMapper,
+                UserDTO.class);
+        assertThat(userDTO.getPseudo()).isEqualTo("Hugo");
+        userDTO.setPseudo("HugoAprès");
+
+        String responseUpdate = mockMvc.perform(put("/api/user/update")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtils.toJson(objectMapper, userDTO)))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        UserDTO userDTOupdate = TestUtils.assertAndExtractData(
+                responseUpdate,
+                "Info Utilisateur mis à jour avec succès",
+                objectMapper,
+                UserDTO.class);
+        assertThat(userDTOupdate.getPseudo()).isEqualTo("HugoAprès");
+
+        String responseVerif = mockMvc.perform(get("/api/user/getUserConnected")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        UserDTO userDTOverif = TestUtils.assertAndExtractData(
+                responseVerif,
+                "Utilisateur récupéré avec succès",
+                objectMapper,
+                UserDTO.class);
+        assertThat(userDTOverif.getPseudo()).isEqualTo("HugoAprès");
+
+
+
+
     }
 }

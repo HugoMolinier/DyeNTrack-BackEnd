@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.dyeTrack.core.entity.User;
-import com.example.dyeTrack.core.exception.ForbiddenException;
 import com.example.dyeTrack.core.exception.UnauthorizedException;
 import com.example.dyeTrack.core.port.in.UserUseCase;
 import com.example.dyeTrack.core.port.out.UserPort;
@@ -84,21 +83,16 @@ public class UserService implements UserUseCase {
 
     @Transactional
     @Override
-    public User update(Long idTokenUser, Long idUser, String pseudo, String password,
-            LocalDate birthdate, Integer height, Boolean sexeMale) {
+    public User update( Long idUser, String pseudo,
+                        Date birthdate, Integer height, Boolean sexeMale) {
 
-        if (!idTokenUser.equals(idUser)) {
-            throw new ForbiddenException("Not same user");
-        }
 
         User user = EntityUtils.getUserOrThrow(idUser, userPort);
 
         if (!isBlank(pseudo))
             user.setPseudo(pseudo);
-        if (!isBlank(password))
-            user.setPassword(passwordEncoder.encode(password));
         if (birthdate != null)
-            user.setBirthdate(Date.valueOf(birthdate));
+            user.setBirthdate(birthdate);
 
         if (height != null) {
             validateHeight(height);

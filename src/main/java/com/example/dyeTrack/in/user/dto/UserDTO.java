@@ -58,6 +58,10 @@ public class UserDTO {
         return birthdate;
     }
 
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
+    }
+
     public Integer getHeight() {
         return height;
     }

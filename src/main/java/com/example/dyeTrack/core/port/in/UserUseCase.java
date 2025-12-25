@@ -1,5 +1,6 @@
 package com.example.dyeTrack.core.port.in;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 import com.example.dyeTrack.core.entity.User;
@@ -13,7 +14,7 @@ public interface UserUseCase {
 
         AuthValue login(String email, String password);
 
-        User update(Long idTokenUSer, Long idUser, String pseudo, String password, LocalDate birthdate, Integer height,
-                        Boolean sexeMale);
+        User update(Long idUser, String pseudo, Date birthdate, Integer height,
+                    Boolean sexeMale);
 
 }
