@@ -8,20 +8,22 @@ public class ExerciseUltraLightReturnDTO {
 
     private Long idExercise;
     private String nameFR;
+    private String nameEN;
 
     public ExerciseUltraLightReturnDTO() {
     }
 
-    public ExerciseUltraLightReturnDTO(Long idExercise, String nameFR) {
+    public ExerciseUltraLightReturnDTO(Long idExercise, String nameFR, String nameEN) {
         this.idExercise = idExercise;
         this.nameFR = nameFR;
+        this.nameEN = nameEN;
     }
 
     public ExerciseUltraLightReturnDTO(Exercise exercise) {
         this.idExercise = exercise.getIdExercise();
         this.nameFR = exercise.getNameFR();
+        this.nameEN = exercise.getNameEN();
     }
-
     public Long getIdExercise() {
         return idExercise;
     }
@@ -36,6 +38,14 @@ public class ExerciseUltraLightReturnDTO {
 
     public void setNameFR(String nameFR) {
         this.nameFR = nameFR;
+    }
+
+    public String getNameEN() {
+        return nameEN;
+    }
+
+    public void setNameEN(String nameEN) {
+        this.nameEN = nameEN;
     }
 
 }

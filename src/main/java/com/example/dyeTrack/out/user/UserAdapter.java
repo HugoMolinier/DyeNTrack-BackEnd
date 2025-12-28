@@ -24,11 +24,6 @@ public class UserAdapter implements UserPort {
 
     }
 
-    public User update(User user) {
-        return userRepository.save(user);
-
-    }
-
     public User findByMailHashed(String hashedEmail) {
         return userRepository.findByEmail(hashedEmail).orElse(null);
     }

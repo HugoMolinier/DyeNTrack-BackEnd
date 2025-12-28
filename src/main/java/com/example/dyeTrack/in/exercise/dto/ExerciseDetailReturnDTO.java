@@ -20,9 +20,9 @@ public class ExerciseDetailReturnDTO extends ExerciseUltraLightReturnDTO {
         super();
     }
 
-    public ExerciseDetailReturnDTO(Long idExercise, String nameFR, String description, String linkVideo, Long idUser,
+    public ExerciseDetailReturnDTO(Long idExercise, String nameFR,String nameEN, String description, String linkVideo, Long idUser,
             List<MuscleInfo> muscleInfos, Long mainFocusGroup) {
-        super(idExercise, nameFR);
+        super(idExercise, nameFR,nameEN);
         this.description = description;
         this.linkVideo = linkVideo;
         this.idCreator = idUser;

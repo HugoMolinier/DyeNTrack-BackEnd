@@ -12,10 +12,10 @@ public interface ExerciseUseCase {
                         Boolean showMainFocusMuscularGroup, List<Integer> idsGroupesMusculaire, List<Integer> idsMuscle,
                         List<Long> idsExercises);
 
-        Exercise create(String nameFR, String description, String linkVideo, Long idUser,
+        Exercise create(String nameFR,String nameEN, String description, String linkVideo, Long idUser,
                         List<MuscleInfo> muscles);
 
-        Exercise update(Long idExercise, Long idUserQuiModifie, String nameFR, String description, String linkVideo,
+        Exercise update(Long idExercise, Long idUserQuiModifie, String nameFR,String nameEN, String description, String linkVideo,
                         List<MuscleInfo> relExerciseMuscles);
 
         void delete(Long idExercise, Long idUser);

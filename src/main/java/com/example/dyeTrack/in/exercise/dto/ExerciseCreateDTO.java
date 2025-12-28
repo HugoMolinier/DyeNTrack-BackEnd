@@ -10,6 +10,9 @@ public class ExerciseCreateDTO {
 
     @NotBlank(message = "nameFR est obligatoire")
     private String nameFR;
+
+    @NotBlank(message = "nameEN est obligatoire")
+    private String nameEN;
     private String description;
     private String linkVideo;
 
@@ -19,13 +22,15 @@ public class ExerciseCreateDTO {
     public ExerciseCreateDTO() {
     }
 
-    public ExerciseCreateDTO(String nameFR, String description, String linkVideo,
-            List<MuscleInfo> relExerciseMuscle) {
+    public ExerciseCreateDTO(String nameFR, String nameEN, String description, String linkVideo,
+                             List<MuscleInfo> relExerciseMuscle) {
         this.nameFR = nameFR;
+        this.nameEN = nameEN;
         this.description = description;
         this.linkVideo = linkVideo;
         this.relExerciseMuscle = relExerciseMuscle;
     }
+
 
     public String getNameFR() {
         return nameFR;
@@ -33,6 +38,14 @@ public class ExerciseCreateDTO {
 
     public void setNameFR(String nameFR) {
         this.nameFR = nameFR;
+    }
+
+    public String getNameEN() {
+        return nameEN;
+    }
+
+    public void setNameEN(String nameEN) {
+        this.nameEN = nameEN;
     }
 
     public String getDescription() {

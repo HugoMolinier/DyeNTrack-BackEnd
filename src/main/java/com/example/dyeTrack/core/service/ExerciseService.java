@@ -52,10 +52,12 @@ public class ExerciseService implements ExerciseUseCase {
     }
 
     @Transactional
-    public Exercise create(String nameFR, String description, String linkVideo, Long idUser,
+    public Exercise create(String nameFR,String nameEN, String description, String linkVideo, Long idUser,
             List<MuscleInfo> relExerciseMuscles) {
         if (nameFR == null)
             throw new IllegalArgumentException("nameFR empty");
+        if (nameEN == null)
+            throw new IllegalArgumentException("nameEN empty");
         if (idUser == null)
             throw new IllegalArgumentException("idUser empty");
         if (relExerciseMuscles == null || relExerciseMuscles.isEmpty())
@@ -63,30 +65,17 @@ public class ExerciseService implements ExerciseUseCase {
 
         User user = EntityUtils.getUserOrThrow(idUser, userPort);
 
-        Exercise exercise = new Exercise(nameFR, description, linkVideo, user);
+        Exercise exercise = new Exercise(nameFR,nameEN, description, linkVideo, user);
         List<RelExerciseMuscle> relations = buildRelExerciseMuscles(exercise, relExerciseMuscles);
         exercise.getRelExerciseMuscles().addAll(relations);
 
         return exercisePort.create(exercise);
     }
 
-    @Transactional
-    public Exercise createOfficial(String nameFR, String description, String linkVideo,
-            List<MuscleInfo> relExerciseMuscles) {
-        if (nameFR == null)
-            throw new IllegalArgumentException("nameFR empty");
-        if (relExerciseMuscles == null || relExerciseMuscles.isEmpty())
-            throw new IllegalArgumentException("La liste des muscles ne peut pas être vide");
 
-        Exercise exercise = new Exercise(nameFR, description, linkVideo, null);
-        List<RelExerciseMuscle> relations = buildRelExerciseMuscles(exercise, relExerciseMuscles);
-        exercise.getRelExerciseMuscles().addAll(relations);
-
-        return exercisePort.create(exercise);
-    }
 
     @Transactional
-    public Exercise update(Long idExercise, Long idUserQuiModifie, String nameFR, String description, String linkVideo,
+    public Exercise update(Long idExercise, Long idUserQuiModifie, String nameFR,String nameEN, String description, String linkVideo,
             List<MuscleInfo> relExerciseMuscles) {
 
         Exercise exercise = EntityUtils.getExerciseOrThrow(idExercise, exercisePort);
@@ -95,11 +84,10 @@ public class ExerciseService implements ExerciseUseCase {
         if (!exercise.getUser().getId().equals(idUserQuiModifie))
             throw new ForbiddenException("Cet utilisateur ne peut pas modifier cet exercise");
 
-        if (nameFR != null || description != null || linkVideo != null) {
-            exercise.setNameFR(nameFR);
-            exercise.setDescription(description);
-            exercise.setLinkVideo(linkVideo);
-        }
+        if (nameFR != null) exercise.setNameFR(nameFR);
+        if (nameEN != null) exercise.setNameEN(nameEN);
+        if (description != null) exercise.setDescription(description);
+        if (linkVideo != null) exercise.setLinkVideo(linkVideo);
 
         if (relExerciseMuscles != null && !relExerciseMuscles.isEmpty()) {
             List<RelExerciseMuscle> relations = buildRelExerciseMuscles(exercise, relExerciseMuscles);

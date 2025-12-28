@@ -9,5 +9,4 @@ public interface UserPort {
 
     User findByMailHashed(String email);
 
-    User update(User user);
 }

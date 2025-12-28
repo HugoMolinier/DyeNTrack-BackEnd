@@ -126,6 +126,7 @@ public class TestUtils {
     public static ExerciseCreateDTO buildExercise(String name, String desc, List<MuscleInfo> muscles) {
         ExerciseCreateDTO dto = new ExerciseCreateDTO();
         dto.setNameFR(name);
+        dto.setNameEN("EN"+name);
         dto.setDescription(desc);
         dto.setRelExerciseMuscles(muscles);
         dto.setLinkVideo("http://youtube.com/xxx");

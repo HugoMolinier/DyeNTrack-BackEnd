@@ -29,6 +29,9 @@ public class Exercise {
     @NotBlank
     private String nameFR;
 
+    @NotBlank
+    private String nameEN;
+
     @Column(columnDefinition = "TEXT")
     private String description;
 
@@ -63,16 +66,10 @@ public class Exercise {
     public Exercise() {
     }
 
-    public Exercise(String nameFR, User user) {
-        this(nameFR, null, null, user);
-    }
 
-    public Exercise(String nameFR, String description, User user) {
-        this(nameFR, description, null, user);
-    }
-
-    public Exercise(String nameFR, String description, String linkVideo, User user) {
+    public Exercise(String nameFR, String nameEN, String description, String linkVideo, User user) {
         this.nameFR = nameFR;
+        this.nameEN = nameEN;
         this.description = description;
         this.linkVideo = linkVideo;
         this.user = user;
@@ -84,6 +81,14 @@ public class Exercise {
 
     public String getNameFR() {
         return nameFR;
+    }
+
+    public String getNameEN() {
+        return nameEN;
+    }
+
+    public void setNameEN(String nameEN) {
+        this.nameEN = nameEN;
     }
 
     public String getDescription() {
