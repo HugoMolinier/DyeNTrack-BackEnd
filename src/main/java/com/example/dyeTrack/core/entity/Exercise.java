@@ -33,7 +33,10 @@ public class Exercise {
     private String nameEN;
 
     @Column(columnDefinition = "TEXT")
-    private String description;
+    private String descriptionFR;
+
+    @Column(columnDefinition = "TEXT")
+    private String descriptionEN;
 
     @Column(columnDefinition = "TEXT")
     private String linkVideo;
@@ -67,10 +70,11 @@ public class Exercise {
     }
 
 
-    public Exercise(String nameFR, String nameEN, String description, String linkVideo, User user) {
+    public Exercise(String nameFR, String nameEN, String descriptionFR,String descriptionEN, String linkVideo, User user) {
         this.nameFR = nameFR;
         this.nameEN = nameEN;
-        this.description = description;
+        this.descriptionFR = descriptionFR;
+        this.descriptionEN = descriptionEN;
         this.linkVideo = linkVideo;
         this.user = user;
     }
@@ -91,8 +95,12 @@ public class Exercise {
         this.nameEN = nameEN;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescriptionFR() {
+        return descriptionFR;
+    }
+
+    public String getDescriptionEN() {
+        return descriptionEN;
     }
 
     public String getLinkVideo() {
@@ -107,8 +115,12 @@ public class Exercise {
         return user;
     }
 
-    public void setDescription(String newDescription) {
-        this.description = newDescription;
+    public void setDescriptionFR(String newDescription) {
+        this.descriptionFR = newDescription;
+    }
+
+    public void setDescriptionEN(String newDescription) {
+        this.descriptionEN = newDescription;
     }
 
     public void setNameFR(String newNameFR) {

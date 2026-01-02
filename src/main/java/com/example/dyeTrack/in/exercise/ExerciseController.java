@@ -98,7 +98,8 @@ public class ExerciseController {
         Exercise exercise = exerciseService.create(
                 exercisedto.getNameFR(),
                 exercisedto.getNameEN(),
-                exercisedto.getDescription(),
+                exercisedto.getDescriptionFR(),
+                exercisedto.getDescriptionEN(),
                 exercisedto.getLinkVideo(),
                 idTokenUser,
                 exercisedto.getRelExerciseMuscles());
@@ -118,7 +119,8 @@ public class ExerciseController {
             exercisesOut.add(new ExerciseDetailReturnDTO(exerciseService.create(
                     ex.getNameFR(),
                     ex.getNameEN(),
-                    ex.getDescription(),
+                    ex.getDescriptionFR(),
+                    ex.getDescriptionEN(),
                     ex.getLinkVideo(),
                     idTokenUser,
                     ex.getRelExerciseMuscles())));
@@ -131,7 +133,7 @@ public class ExerciseController {
     public ResponseEntity<ResponseBuilder.ResponseDTO<ExerciseDetailReturnDTO>> update(@PathVariable Long id,
             @RequestBody @Valid ExerciseCreateDTO dto) {
         Long idTokenUser = SecurityUtil.getUserIdFromContext();
-        Exercise updatedExercise = exerciseService.update(id, idTokenUser, dto.getNameFR(),dto.getNameEN(), dto.getDescription(),
+        Exercise updatedExercise = exerciseService.update(id, idTokenUser, dto.getNameFR(),dto.getNameEN(), dto.getDescriptionFR(),dto.getDescriptionEN(),
                 dto.getLinkVideo(),
                 dto.getRelExerciseMuscles());
         return ResponseBuilder.success(buildDetailDTO(updatedExercise, true, true), "Exercise mis à jour avec succès");

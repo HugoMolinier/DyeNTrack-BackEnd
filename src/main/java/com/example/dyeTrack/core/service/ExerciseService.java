@@ -52,7 +52,7 @@ public class ExerciseService implements ExerciseUseCase {
     }
 
     @Transactional
-    public Exercise create(String nameFR,String nameEN, String description, String linkVideo, Long idUser,
+    public Exercise create(String nameFR,String nameEN, String descriptionFR,String descriptionEN, String linkVideo, Long idUser,
             List<MuscleInfo> relExerciseMuscles) {
         if (nameFR == null)
             throw new IllegalArgumentException("nameFR empty");
@@ -65,7 +65,7 @@ public class ExerciseService implements ExerciseUseCase {
 
         User user = EntityUtils.getUserOrThrow(idUser, userPort);
 
-        Exercise exercise = new Exercise(nameFR,nameEN, description, linkVideo, user);
+        Exercise exercise = new Exercise(nameFR,nameEN, descriptionFR,descriptionEN, linkVideo, user);
         List<RelExerciseMuscle> relations = buildRelExerciseMuscles(exercise, relExerciseMuscles);
         exercise.getRelExerciseMuscles().addAll(relations);
 
@@ -75,7 +75,7 @@ public class ExerciseService implements ExerciseUseCase {
 
 
     @Transactional
-    public Exercise update(Long idExercise, Long idUserQuiModifie, String nameFR,String nameEN, String description, String linkVideo,
+    public Exercise update(Long idExercise, Long idUserQuiModifie, String nameFR,String nameEN, String descriptionFR,String descriptionEN, String linkVideo,
             List<MuscleInfo> relExerciseMuscles) {
 
         Exercise exercise = EntityUtils.getExerciseOrThrow(idExercise, exercisePort);
@@ -86,7 +86,8 @@ public class ExerciseService implements ExerciseUseCase {
 
         if (nameFR != null) exercise.setNameFR(nameFR);
         if (nameEN != null) exercise.setNameEN(nameEN);
-        if (description != null) exercise.setDescription(description);
+        if (descriptionFR != null) exercise.setDescriptionFR(descriptionFR);
+        if (descriptionEN != null) exercise.setDescriptionFR(descriptionEN);
         if (linkVideo != null) exercise.setLinkVideo(linkVideo);
 
         if (relExerciseMuscles != null && !relExerciseMuscles.isEmpty()) {

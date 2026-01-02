@@ -12,7 +12,8 @@ public class ExerciseDetailReturnDTO extends ExerciseUltraLightReturnDTO {
     private List<MuscleInfo> muscleInfos;
     private Long mainFocusGroup;
 
-    private String description;
+    private String descriptionFR;
+    private String descriptionEN;
     private String linkVideo;
     private Long idCreator;
 
@@ -20,10 +21,11 @@ public class ExerciseDetailReturnDTO extends ExerciseUltraLightReturnDTO {
         super();
     }
 
-    public ExerciseDetailReturnDTO(Long idExercise, String nameFR,String nameEN, String description, String linkVideo, Long idUser,
+    public ExerciseDetailReturnDTO(Long idExercise, String nameFR,String nameEN, String descriptionFR,String descriptionEN, String linkVideo, Long idUser,
             List<MuscleInfo> muscleInfos, Long mainFocusGroup) {
         super(idExercise, nameFR,nameEN);
-        this.description = description;
+        this.descriptionFR = descriptionFR;
+        this.descriptionEN = descriptionEN;
         this.linkVideo = linkVideo;
         this.idCreator = idUser;
         this.muscleInfos = muscleInfos;
@@ -32,7 +34,8 @@ public class ExerciseDetailReturnDTO extends ExerciseUltraLightReturnDTO {
 
     public ExerciseDetailReturnDTO(Exercise exercise, List<MuscleInfo> muscleInfos, Long mainFocusGroup) {
         super(exercise);
-        this.description = exercise.getDescription();
+        this.descriptionFR = exercise.getDescriptionFR();
+        this.descriptionEN = exercise.getDescriptionEN();
         this.linkVideo = exercise.getLinkVideo();
         this.idCreator = exercise.getUser() != null ? exercise.getUser().getId() : null;
         this.muscleInfos = muscleInfos;
@@ -41,18 +44,26 @@ public class ExerciseDetailReturnDTO extends ExerciseUltraLightReturnDTO {
 
     public ExerciseDetailReturnDTO(Exercise exercise) {
         super(exercise);
-        this.description = exercise.getDescription();
+        this.descriptionFR = exercise.getDescriptionFR();
+        this.descriptionEN = exercise.getDescriptionEN();
         this.linkVideo = exercise.getLinkVideo();
         this.idCreator = exercise.getUser() != null ? exercise.getUser().getId() : null;
 
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescriptionFR() {
+        return descriptionFR;
+    }
+    public String getDescriptionEN() {
+        return descriptionEN;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptionFR(String description) {
+        this.descriptionFR = description;
+    }
+
+    public void setDescriptionEN(String description) {
+        this.descriptionEN = description;
     }
 
     public String getLinkVideo() {

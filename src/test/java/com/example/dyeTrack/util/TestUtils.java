@@ -127,7 +127,7 @@ public class TestUtils {
         ExerciseCreateDTO dto = new ExerciseCreateDTO();
         dto.setNameFR(name);
         dto.setNameEN("EN"+name);
-        dto.setDescription(desc);
+        dto.setDescriptionFR(desc);
         dto.setRelExerciseMuscles(muscles);
         dto.setLinkVideo("http://youtube.com/xxx");
         return dto;

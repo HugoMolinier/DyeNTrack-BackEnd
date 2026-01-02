@@ -63,7 +63,8 @@ public class ExerciseControllerTest {
 
                 assertThat(created).isNotNull();
                 assertThat(created.getNameFR()).isEqualTo(dto.getNameFR());
-                assertThat(created.getDescription()).isEqualTo(dto.getDescription());
+                assertThat(created.getDescriptionFR()).isEqualTo(dto.getDescriptionFR());
+                assertThat(created.getDescriptionEN()).isEqualTo(dto.getDescriptionEN());
                 assertThat(created.getMuscleInfos()).hasSize(2);
                 assertThat(created.getMuscleInfos()).anyMatch(m -> m.isPrincipal());
                 assertThat(created.getMuscleInfos()).anyMatch(m -> !m.isPrincipal());
@@ -111,7 +112,7 @@ public class ExerciseControllerTest {
         @Test
         void testCreateExercise_missingFields() throws Exception {
                 ExerciseCreateDTO dto = new ExerciseCreateDTO();
-                dto.setDescription("Exercise pectoraux");
+                dto.setDescriptionFR("Exercise pectoraux");
 
                 mockMvc.perform(post("/api/Exercise/create")
                                 .header("Authorization", "Bearer " + tokenUser1)
@@ -153,7 +154,7 @@ public class ExerciseControllerTest {
 
                 ExerciseCreateDTO updateDTO = new ExerciseCreateDTO();
                 updateDTO.setNameFR("Pompes inclinées");
-                updateDTO.setDescription("Exercise pectoraux haut");
+                updateDTO.setDescriptionFR("Exercise pectoraux haut");
                 updateDTO.setLinkVideo("http://youtube.com/new-link");
 
                 String response = mockMvc
@@ -169,7 +170,7 @@ public class ExerciseControllerTest {
                                 ExerciseDetailReturnDTO.class);
 
                 assertThat(updatedExercise.getNameFR()).isEqualTo("Pompes inclinées");
-                assertThat(updatedExercise.getDescription()).isEqualTo("Exercise pectoraux haut");
+                assertThat(updatedExercise.getDescriptionFR()).isEqualTo("Exercise pectoraux haut");
                 assertThat(updatedExercise.getMuscleInfos()).hasSize(3);
 
                 updateDTO.setRelExerciseMuscles(
@@ -187,7 +188,7 @@ public class ExerciseControllerTest {
                                 ExerciseDetailReturnDTO.class);
 
                 assertThat(updatedExercise2.getNameFR()).isEqualTo("Pompes inclinées");
-                assertThat(updatedExercise2.getDescription()).isEqualTo("Exercise pectoraux haut");
+                assertThat(updatedExercise2.getDescriptionFR()).isEqualTo("Exercise pectoraux haut");
                 assertThat(updatedExercise2.getMuscleInfos()).hasSize(2);
                 assertThat(updatedExercise2.getMuscleInfos().stream().filter(MuscleInfo::isPrincipal)).hasSize(1);
 
@@ -204,7 +205,7 @@ public class ExerciseControllerTest {
 
                 ExerciseCreateDTO updateByOtherUser = new ExerciseCreateDTO();
                 updateByOtherUser.setNameFR("Pompes déclinées");
-                updateByOtherUser.setDescription("Tentative modification non autorisée");
+                updateByOtherUser.setDescriptionFR("Tentative modification non autorisée");
 
                 mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders
                                 .put("/api/Exercise/update/" + created.getIdExercise())
