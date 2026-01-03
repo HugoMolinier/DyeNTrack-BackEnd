@@ -1,5 +1,6 @@
 package com.example.dyeTrack.core.service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -114,12 +115,10 @@ public class PresetSeanceService implements PresetSeanceUseCase {
                     ));
                 }
             }
-
-            // Remplacer la collection par les exercices finaux
             presetSeance.getPresetSeanceExercise().clear();
             presetSeance.getPresetSeanceExercise().addAll(finalExercises);
         }
-
+        presetSeance.setLastUpdate(Instant.now());
         return presetSeancePort.save(presetSeance);
     }
 

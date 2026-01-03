@@ -1,18 +1,12 @@
 package com.example.dyeTrack.core.entity;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.example.dyeTrack.core.entity.PresetSeanceExercise.PresetSeanceExercise;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -28,6 +22,23 @@ public class PresetSeance {
     @ManyToOne
     @JoinColumn(name = "idCreator", nullable = false)
     private User user;
+
+    @Column(nullable = false)
+    private Instant lastUpdate;
+
+    public Instant getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Instant lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    @PrePersist
+    @PreUpdate
+    public void updateTimestamp() {
+        this.lastUpdate = Instant.now();
+    }
 
     @OneToMany(mappedBy = "presetSeance", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PresetSeanceExercise> presetSeanceExercises = new ArrayList<>();

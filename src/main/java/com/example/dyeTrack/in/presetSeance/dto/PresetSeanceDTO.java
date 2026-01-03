@@ -1,5 +1,6 @@
 package com.example.dyeTrack.in.presetSeance.dto;
 
+import java.time.Instant;
 import java.util.List;
 
 import com.example.dyeTrack.core.entity.PresetSeance;
@@ -12,6 +13,8 @@ public class PresetSeanceDTO {
     private List<PresetSeanceExerciseVO> presetSeanceExerciseVO;
     private Long idPresetSeance;
     private String name;
+    private Instant lastUpdate;
+
 
     public PresetSeanceDTO() {
     }
@@ -28,9 +31,11 @@ public class PresetSeanceDTO {
     }
     public PresetSeanceDTO(PresetSeance presetSeance, List<PresetSeanceExerciseVO> presetSeanceExerciseVOs) {
         this.idPresetSeance = presetSeance.getIdPresetSeance();
+        this.lastUpdate = presetSeance.getLastUpdate();
         this.name = presetSeance.getName();
         this.presetSeanceExerciseVO = presetSeanceExerciseVOs;
     }
+
     public PresetSeanceDTO(String  name, List<PresetSeanceExerciseVO> presetSeanceExerciseVOs) {
         this.name = name;
         this.presetSeanceExerciseVO = presetSeanceExerciseVOs;
@@ -58,6 +63,14 @@ public class PresetSeanceDTO {
 
     public void setPresetSeanceExerciseVO(List<PresetSeanceExerciseVO> presetSeanceExerciseVO) {
         this.presetSeanceExerciseVO = presetSeanceExerciseVO;
+    }
+
+    public void setLastUpdate(Instant lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public Instant getLastUpdate() {
+        return lastUpdate;
     }
 
 }
