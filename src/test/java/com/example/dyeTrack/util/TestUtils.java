@@ -6,8 +6,7 @@ import com.example.dyeTrack.core.valueobject.MuscleInfo;
 import com.example.dyeTrack.in.exercise.dto.ExerciseDetailReturnDTO;
 import com.example.dyeTrack.in.dayDataOfUser.dto.returnDTO.DayDataOfUserReturnDTO;
 import com.example.dyeTrack.in.exercise.dto.ExerciseCreateDTO;
-import com.example.dyeTrack.in.presetSeance.dto.PresetSeanceReturnDTO;
-import com.example.dyeTrack.in.presetSeance.dto.PresetSeanceCreateRequestDTO;
+import com.example.dyeTrack.in.presetSeance.dto.PresetSeanceDTO;
 import com.example.dyeTrack.in.user.dto.RegisterUserDTO;
 import com.example.dyeTrack.in.user.dto.ReturnUserTokenDTO;
 import com.example.dyeTrack.in.utils.ResponseBuilder;
@@ -63,18 +62,18 @@ public class TestUtils {
         return assertAndExtractData(response, "Utilisateur créé avec succès", objectMapper, ReturnUserTokenDTO.class);
     }
 
-    public static PresetSeanceReturnDTO createPreset(MockMvc mockMvc, ObjectMapper objectMapper,
-            String token, PresetSeanceCreateRequestDTO presetDTO) throws Exception {
+    public static PresetSeanceDTO savePreset(MockMvc mockMvc, ObjectMapper objectMapper,
+                                               String token, PresetSeanceDTO presetDTO) throws Exception {
 
-        String response = mockMvc.perform(post("/api/preset-seances/create")
+        String response = mockMvc.perform(post("/api/preset-seances/save")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(TestUtils.toJson(objectMapper, presetDTO)))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
         return TestUtils.assertAndExtractData(response, "Preset créé avec succès", objectMapper,
-                PresetSeanceReturnDTO.class);
+                PresetSeanceDTO.class);
     }
 
     public static <T> T assertAndExtractData(String response, String messageToAssert, ObjectMapper objectMapper,
