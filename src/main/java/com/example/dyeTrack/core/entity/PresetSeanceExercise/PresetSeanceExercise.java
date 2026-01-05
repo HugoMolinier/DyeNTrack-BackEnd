@@ -24,7 +24,7 @@ public class PresetSeanceExercise {
     @JoinColumn(name = "exercise_id")
     private Exercise exercise;
 
-    private String parameter;
+    private Integer nbSet;
     private Integer rangeRepInf;
     private Integer rangeRepSup;
 
@@ -46,12 +46,12 @@ public class PresetSeanceExercise {
     }
 
     public PresetSeanceExercise(PresetSeance presetSeance, Exercise exercise,
-            String parameter, Integer rangeRepInf, Integer rangeRepSup,
+                                Integer nbSet, Integer rangeRepInf, Integer rangeRepSup,
             Integer orderExercise, Lateralite lateralite, Equipment equipment) {
         this.presetSeance = presetSeance;
         this.id = new PresetSeanceExerciseId(presetSeance.getIdPresetSeance(), exercise.getIdExercise());
         this.exercise = exercise;
-        this.parameter = parameter;
+        this.nbSet = nbSet;
         this.rangeRepInf = rangeRepInf;
         this.rangeRepSup = rangeRepSup;
         this.orderExercise = orderExercise;
@@ -72,12 +72,12 @@ public class PresetSeanceExercise {
         return exercise;
     }
 
-    public String getParameter() {
-        return parameter;
+    public Integer getNbSet() {
+        return nbSet;
     }
 
-    public void setParameter(String parameter) {
-        this.parameter = parameter;
+    public void setNbSet(Integer nbSet) {
+        this.nbSet = nbSet;
     }
 
     public Integer getRangeRepInf() {

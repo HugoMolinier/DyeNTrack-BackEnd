@@ -2,16 +2,16 @@ package com.example.dyeTrack.core.valueobject;
 
 public class PresetSeanceExerciseVO {
     private Long idExercise;
-    private String parameter;
+    private Integer nbSet;
     private Integer rangeRepInf;
     private Integer rangeRepSup;
     private Long idLateralite;
     private Long idEquipment;
 
-    public PresetSeanceExerciseVO(Long idExercise, String parameter, Integer rangeRepInf, Integer rangeRepSup,
+    public PresetSeanceExerciseVO(Long idExercise, Integer nbSet, Integer rangeRepInf, Integer rangeRepSup,
             Long idLateralite, Long idEquipment) {
         this.idExercise = idExercise;
-        this.parameter = parameter;
+        this.nbSet = nbSet;
         this.rangeRepInf = rangeRepInf;
         this.rangeRepSup = rangeRepSup;
         this.idLateralite = idLateralite;
@@ -25,8 +25,8 @@ public class PresetSeanceExerciseVO {
         return idExercise;
     }
 
-    public String getParameter() {
-        return parameter;
+    public Integer getNbSet() {
+        return nbSet;
     }
 
     public Integer getRangeRepInf() {
@@ -49,8 +49,8 @@ public class PresetSeanceExerciseVO {
         this.idExercise = idExercise;
     }
 
-    public void setParameter(String parameter) {
-        this.parameter = parameter;
+    public void setParameter(Integer nbSet) {
+        this.nbSet = nbSet;
     }
 
     public void setRangeRepInf(Integer rangeRepInf) {

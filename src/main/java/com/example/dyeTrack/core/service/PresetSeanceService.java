@@ -94,7 +94,7 @@ public class PresetSeanceService implements PresetSeanceUseCase {
 
                 if (existing != null) {
                     // Mettre à jour seulement si nécessaire
-                    existing.setParameter(vo.getParameter());
+                    existing.setNbSet(vo.getNbSet());
                     existing.setRangeRepInf(vo.getRangeRepInf());
                     existing.setRangeRepSup(vo.getRangeRepSup());
                     existing.setOrderExercise(index++);
@@ -106,7 +106,7 @@ public class PresetSeanceService implements PresetSeanceUseCase {
                     finalExercises.add(new PresetSeanceExercise(
                             presetSeance,
                             exercise,
-                            vo.getParameter(),
+                            vo.getNbSet(),
                             vo.getRangeRepInf(),
                             vo.getRangeRepSup(),
                             index++,

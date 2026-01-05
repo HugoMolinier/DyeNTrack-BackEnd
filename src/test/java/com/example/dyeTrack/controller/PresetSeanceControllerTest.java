@@ -60,7 +60,7 @@ public class PresetSeanceControllerTest {
                 ExerciseDetailReturnDTO createdexe = createSampleExercise("pompe");
 
                 PresetSeanceDTO presetSeance = new PresetSeanceDTO("Push Day",
-                                List.of(new PresetSeanceExerciseVO(createdexe.getIdExercise(), "5 reps", 10, 15, 1L,
+                                List.of(new PresetSeanceExerciseVO(createdexe.getIdExercise(), 6, 10, 15, 1L,
                                                 1L)));
 
                 PresetSeanceDTO presetSeanceex = TestUtils.savePreset(mockMvc, objectMapper, tokenUser1,
@@ -84,7 +84,7 @@ public class PresetSeanceControllerTest {
                 ExerciseDetailReturnDTO createdexe = createSampleExercise("pompe");
 
                 PresetSeanceDTO presetSeance = new PresetSeanceDTO("Push Day",
-                                List.of(new PresetSeanceExerciseVO(createdexe.getIdExercise(), "5 reps", 10, 15, 1L,
+                                List.of(new PresetSeanceExerciseVO(createdexe.getIdExercise(), 5, 10, 15, 1L,
                                                 1L)));
                 PresetSeanceDTO presetSeanceex = TestUtils.savePreset(mockMvc, objectMapper, tokenUser1,
                                 presetSeance);
@@ -113,9 +113,9 @@ public class PresetSeanceControllerTest {
 
                 presetSeanceex1.setName("Push");
                 presetSeanceex1.setPresetSeanceExerciseVO(
-                                List.of(new PresetSeanceExerciseVO(createdexe2.getIdExercise(), "6 hauteur", 9, 14, 1L,
+                                List.of(new PresetSeanceExerciseVO(createdexe2.getIdExercise(), 6, 9, 14, 1L,
                                                 1L),
-                                                new PresetSeanceExerciseVO(createdexe.getIdExercise(), "3 hauteur", 7,
+                                                new PresetSeanceExerciseVO(createdexe.getIdExercise(), 3, 7,
                                                                 12, 2L,
                                                                 2L)));
 
@@ -135,8 +135,8 @@ public class PresetSeanceControllerTest {
 
 
 
-                assertThat(presetSeanceex2.getPresetSeanceExerciseVO().get(0).getParameter())
-                                .isEqualTo("6 hauteur");
+                assertThat(presetSeanceex2.getPresetSeanceExerciseVO().get(0).getNbSet())
+                                .isEqualTo(6);
                 assertThat(presetSeanceex2.getPresetSeanceExerciseVO().get(0).getRangeRepInf())
                                 .isEqualTo(9);
                 assertThat(presetSeanceex2.getPresetSeanceExerciseVO().get(0).getRangeRepSup())
@@ -154,7 +154,7 @@ public class PresetSeanceControllerTest {
                 ExerciseDetailReturnDTO createdexe = createSampleExercise("pompe");
 
                 PresetSeanceDTO presetSeance = new PresetSeanceDTO("Push Day",
-                                List.of(new PresetSeanceExerciseVO(createdexe.getIdExercise(), "5 reps", 10, 15, 1L,
+                                List.of(new PresetSeanceExerciseVO(createdexe.getIdExercise(), 5, 10, 15, 1L,
                                                 1L)));
 
                 PresetSeanceDTO savePreset = TestUtils.savePreset(mockMvc, objectMapper, tokenUser1,
@@ -193,7 +193,7 @@ public class PresetSeanceControllerTest {
                 ExerciseDetailReturnDTO createdexe = TestUtils.createExercise(mockMvc, objectMapper, tokenUser1, dto);
 
                 PresetSeanceDTO presetSeance = new PresetSeanceDTO("Pull",
-                                List.of(new PresetSeanceExerciseVO(createdexe.getIdExercise(), "5 hauteur", 7, 12, 1L,
+                                List.of(new PresetSeanceExerciseVO(createdexe.getIdExercise(), 5, 7, 12, 1L,
                                                 1L)));
 
                 // Token invalide
@@ -209,7 +209,7 @@ public class PresetSeanceControllerTest {
                 ExerciseDetailReturnDTO createdexe = createSampleExercise("pompe");
 
                 PresetSeanceDTO presetSeance = new PresetSeanceDTO("Push Day",
-                                List.of(new PresetSeanceExerciseVO(createdexe.getIdExercise(), "5 reps", 10, 15, 1L,
+                                List.of(new PresetSeanceExerciseVO(createdexe.getIdExercise(), 5, 10, 15, 1L,
                                                 1L)));
 
                 PresetSeanceDTO createdPreset = TestUtils.savePreset(mockMvc, objectMapper, tokenUser1,
@@ -235,7 +235,7 @@ public class PresetSeanceControllerTest {
                 ExerciseDetailReturnDTO createdexe = createSampleExercise("pompe");
 
                 PresetSeanceDTO presetSeance = new PresetSeanceDTO("Push Day",
-                                List.of(new PresetSeanceExerciseVO(createdexe.getIdExercise(), "5 reps", 10, 15, 1L,
+                                List.of(new PresetSeanceExerciseVO(createdexe.getIdExercise(), 5, 10, 15, 1L,
                                                 1L)));
 
                 PresetSeanceDTO createdPreset = TestUtils.savePreset(mockMvc, objectMapper, tokenUser1,
@@ -252,7 +252,7 @@ public class PresetSeanceControllerTest {
                 ExerciseDetailReturnDTO createdexe = createSampleExercise("pompe");
 
                 PresetSeanceDTO presetSeance = new PresetSeanceDTO("Push Day",
-                                List.of(new PresetSeanceExerciseVO(createdexe.getIdExercise(), "5 reps", 10, 15, 1L,
+                                List.of(new PresetSeanceExerciseVO(createdexe.getIdExercise(), 5, 10, 15, 1L,
                                                 1L)));
 
                 PresetSeanceDTO createdPreset = TestUtils.savePreset(mockMvc, objectMapper, tokenUser1,
@@ -277,7 +277,7 @@ public class PresetSeanceControllerTest {
                 ExerciseDetailReturnDTO createdexe = createSampleExercise("pompe");
 
                 PresetSeanceDTO presetSeance = new PresetSeanceDTO("Push Day",
-                                List.of(new PresetSeanceExerciseVO(createdexe.getIdExercise(), "5 reps", 10, 15, 1L,
+                                List.of(new PresetSeanceExerciseVO(createdexe.getIdExercise(), 5, 10, 15, 1L,
                                                 1L)));
 
                 PresetSeanceDTO createdPreset = TestUtils.savePreset(mockMvc, objectMapper, tokenUser1,
@@ -333,10 +333,10 @@ public class PresetSeanceControllerTest {
                 ExerciseDetailReturnDTO createdExe = TestUtils.createExercise(mockMvc, objectMapper, tokenUser1, dto);
 
                 PresetSeanceDTO preset1 = new PresetSeanceDTO("Push Day",
-                                List.of(new PresetSeanceExerciseVO(createdExe.getIdExercise(), "5 reps", 10, 15, 1L,
+                                List.of(new PresetSeanceExerciseVO(createdExe.getIdExercise(), 5, 10, 15, 1L,
                                                 1L)));
                 PresetSeanceDTO preset2 = new PresetSeanceDTO("Pull Day",
-                                List.of(new PresetSeanceExerciseVO(createdExe.getIdExercise(), "5 reps", 10, 15, 1L,
+                                List.of(new PresetSeanceExerciseVO(createdExe.getIdExercise(), 5, 10, 15, 1L,
                                                 1L)));
 
                 // Création des presets via POST
@@ -389,10 +389,10 @@ public class PresetSeanceControllerTest {
                 ExerciseDetailReturnDTO createdExe = TestUtils.createExercise(mockMvc, objectMapper, tokenUser1, dto);
 
                 PresetSeanceDTO preset1 = new PresetSeanceDTO("Push Day",
-                                List.of(new PresetSeanceExerciseVO(createdExe.getIdExercise(), "5 reps", 10, 15, 1L,
+                                List.of(new PresetSeanceExerciseVO(createdExe.getIdExercise(), 5, 10, 15, 1L,
                                                 1L)));
                 PresetSeanceDTO preset2 = new PresetSeanceDTO("Pull Day",
-                                List.of(new PresetSeanceExerciseVO(createdExe.getIdExercise(), "5 reps", 10, 15, 1L,
+                                List.of(new PresetSeanceExerciseVO(createdExe.getIdExercise(), 5, 10, 15, 1L,
                                                 1L)));
 
                 mockMvc.perform(post("/api/preset-seances/save")

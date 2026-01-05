@@ -96,7 +96,7 @@ public class PresetSeanceController {
                 .sorted(Comparator.comparingInt(PresetSeanceExercise::getOrderExercise))
                 .map(pse -> new PresetSeanceExerciseVO(
                         pse.getExercise().getIdExercise(),
-                        pse.getParameter(),
+                        pse.getNbSet(),
                         pse.getRangeRepInf(),
                         pse.getRangeRepSup(),
                         pse.getLateralite().getId(),
