@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.example.dyeTrack.in.exercise.dto.MuscleInfoReturnDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,7 +69,7 @@ public class MasterDataController {
             refreshCache();
             System.out.println("Cache rafraîchi automatiquement depuis /static car trop vieux");
         }
-        return ResponseBuilder.success(buildMasterData(), "Toutes les données récupérées avec succès");
+        return ResponseBuilder.success(cachedData, "Toutes les données récupérées avec succès");
     }
 
     @GetMapping("/lastUpdate")
@@ -88,15 +89,19 @@ public class MasterDataController {
                 true, null,
                 null, null).stream()
                 .map(ex -> {
-                    List<MuscleInfo> muscles = new ArrayList<>();
+                    List<MuscleInfoReturnDTO> muscles = new ArrayList<>();
                     Long mainFocus = null;
+                    Long mainMuscle=null;
                     for (RelExerciseMuscle rel : ex.getRelExerciseMuscles()) {
-                        muscles.add(new MuscleInfo(rel.getMuscle().getId(), rel.isPrincipal()));
+                        muscles.add(new MuscleInfoReturnDTO(rel.getMuscle().getId()));
+                        if (rel.isPrincipal()){
+                            mainMuscle= rel.getMuscle().getId();
+                        }
                         if (rel.isPrincipal() && mainFocus == null && rel.getMuscle().getMuscleGroup() != null) {
                             mainFocus = rel.getMuscle().getMuscleGroup().getId();
                         }
                     }
-                    return new ExerciseDetailReturnDTO(ex, muscles, mainFocus);
+                    return new ExerciseDetailReturnDTO(ex, muscles, mainFocus,mainMuscle);
                 })
                 .collect(Collectors.toList());
 

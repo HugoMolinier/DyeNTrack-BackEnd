@@ -66,8 +66,8 @@ public class ExerciseControllerTest {
                 assertThat(created.getDescriptionFR()).isEqualTo(dto.getDescriptionFR());
                 assertThat(created.getDescriptionEN()).isEqualTo(dto.getDescriptionEN());
                 assertThat(created.getMuscleInfos()).hasSize(2);
-                assertThat(created.getMuscleInfos()).anyMatch(m -> m.isPrincipal());
-                assertThat(created.getMuscleInfos()).anyMatch(m -> !m.isPrincipal());
+                assertThat(created.getMainMuscle()).isEqualTo(1L);
+                assertThat(created.getMainMuscle()).isNotEqualTo(2L);
 
                 assertThat(created.getMainFocusGroup()).isNotNull();
                 assertThat(created.getMainFocusGroup()).isEqualTo(1L);
@@ -190,7 +190,7 @@ public class ExerciseControllerTest {
                 assertThat(updatedExercise2.getNameFR()).isEqualTo("Pompes inclinées");
                 assertThat(updatedExercise2.getDescriptionFR()).isEqualTo("Exercise pectoraux haut");
                 assertThat(updatedExercise2.getMuscleInfos()).hasSize(2);
-                assertThat(updatedExercise2.getMuscleInfos().stream().filter(MuscleInfo::isPrincipal)).hasSize(1);
+                assertThat(updatedExercise2.getMainMuscle()).isEqualTo(1L);
 
                 // change muscleInfo
                 updateDTO.setRelExerciseMuscles(
@@ -277,7 +277,7 @@ public class ExerciseControllerTest {
                 ExerciseDetailReturnDTO principalDTO = TestUtils.assertAndExtractData(principalResp,
                                 "Exercise récupérée avec succès", objectMapper,
                                 ExerciseDetailReturnDTO.class);
-                assertThat(principalDTO.getMuscleInfos()).allMatch(MuscleInfo::isPrincipal);
+                assertThat(principalDTO.getMainMuscle()).isEqualTo(1L);
 
                 // Wrong Id
 

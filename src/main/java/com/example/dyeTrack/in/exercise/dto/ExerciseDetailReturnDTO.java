@@ -9,8 +9,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ExerciseDetailReturnDTO extends ExerciseUltraLightReturnDTO {
 
-    private List<MuscleInfo> muscleInfos;
+    private List<MuscleInfoReturnDTO> muscleInfos;
     private Long mainFocusGroup;
+    private Long mainMuscle;
 
     private String descriptionFR;
     private String descriptionEN;
@@ -22,7 +23,7 @@ public class ExerciseDetailReturnDTO extends ExerciseUltraLightReturnDTO {
     }
 
     public ExerciseDetailReturnDTO(Long idExercise, String nameFR,String nameEN, String descriptionFR,String descriptionEN, String linkVideo, Long idUser,
-            List<MuscleInfo> muscleInfos, Long mainFocusGroup) {
+            List<MuscleInfoReturnDTO> muscleInfos, Long mainFocusGroup) {
         super(idExercise, nameFR,nameEN);
         this.descriptionFR = descriptionFR;
         this.descriptionEN = descriptionEN;
@@ -32,7 +33,7 @@ public class ExerciseDetailReturnDTO extends ExerciseUltraLightReturnDTO {
         this.mainFocusGroup = mainFocusGroup;
     }
 
-    public ExerciseDetailReturnDTO(Exercise exercise, List<MuscleInfo> muscleInfos, Long mainFocusGroup) {
+    public ExerciseDetailReturnDTO(Exercise exercise, List<MuscleInfoReturnDTO> muscleInfos, Long mainFocusGroup) {
         super(exercise);
         this.descriptionFR = exercise.getDescriptionFR();
         this.descriptionEN = exercise.getDescriptionEN();
@@ -40,6 +41,17 @@ public class ExerciseDetailReturnDTO extends ExerciseUltraLightReturnDTO {
         this.idCreator = exercise.getUser() != null ? exercise.getUser().getId() : null;
         this.muscleInfos = muscleInfos;
         this.mainFocusGroup = mainFocusGroup;
+    }
+
+    public ExerciseDetailReturnDTO(Exercise exercise, List<MuscleInfoReturnDTO> muscleInfos, Long mainFocusGroup,Long mainMuscle) {
+        super(exercise);
+        this.descriptionFR = exercise.getDescriptionFR();
+        this.descriptionEN = exercise.getDescriptionEN();
+        this.linkVideo = exercise.getLinkVideo();
+        this.idCreator = exercise.getUser() != null ? exercise.getUser().getId() : null;
+        this.muscleInfos = muscleInfos;
+        this.mainFocusGroup = mainFocusGroup;
+        this.mainMuscle = mainMuscle;
     }
 
     public ExerciseDetailReturnDTO(Exercise exercise) {
@@ -82,12 +94,16 @@ public class ExerciseDetailReturnDTO extends ExerciseUltraLightReturnDTO {
         this.idCreator = idUser;
     }
 
-    public List<MuscleInfo> getMuscleInfos() {
+    public List<MuscleInfoReturnDTO> getMuscleInfos() {
         return muscleInfos;
     }
 
-    public void setMuscleInfos(List<MuscleInfo> muscleInfos) {
+    public void setMuscleInfos(List<MuscleInfoReturnDTO> muscleInfos) {
         this.muscleInfos = muscleInfos;
+    }
+
+    public void setMainMuscle(Long idMuscle) {
+        this.mainMuscle = idMuscle;
     }
 
     public Long getMainFocusGroup() {
@@ -96,5 +112,8 @@ public class ExerciseDetailReturnDTO extends ExerciseUltraLightReturnDTO {
 
     public void setMainFocusGroup(Long newMainFocusGroup) {
         this.mainFocusGroup = newMainFocusGroup;
+    }
+    public Long getMainMuscle() {
+        return mainMuscle;
     }
 }

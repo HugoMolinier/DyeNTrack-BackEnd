@@ -1,5 +1,6 @@
 package com.example.dyeTrack.in.exercise;
 
+import com.example.dyeTrack.in.exercise.dto.MuscleInfoReturnDTO;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -152,14 +153,16 @@ public class ExerciseController {
     // Helper
     private ExerciseDetailReturnDTO buildDetailDTO(Exercise exercise, boolean includeMuscles,
             boolean includeMainGroup) {
-        List<MuscleInfo> muscles = new ArrayList<>();
+        List<MuscleInfoReturnDTO> muscles = new ArrayList<>();
         Long mainFocusGroup = null;
-
+        Long mainMuscle = null;
         for (RelExerciseMuscle rel : exercise.getRelExerciseMuscles()) {
             if (includeMuscles) {
-                muscles.add(new MuscleInfo(
-                        rel.getMuscle().getId(),
-                        rel.isPrincipal()));
+                muscles.add(new MuscleInfoReturnDTO(rel.getMuscle().getId()));
+                if (rel.isPrincipal()){
+                    mainMuscle= rel.getMuscle().getId();
+                }
+
             }
 
             if (includeMainGroup && rel.isPrincipal() && mainFocusGroup == null) {
@@ -170,7 +173,7 @@ public class ExerciseController {
             }
         }
 
-        return new ExerciseDetailReturnDTO(exercise, muscles, mainFocusGroup);
+        return new ExerciseDetailReturnDTO(exercise, muscles, mainFocusGroup,mainMuscle);
     }
 
 }
