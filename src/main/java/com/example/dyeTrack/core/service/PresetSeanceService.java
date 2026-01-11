@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.example.dyeTrack.core.entity.RelEexerciseEquipment.RelExerciseEquipment;
 import org.springframework.stereotype.Service;
 
 import com.example.dyeTrack.core.entity.Equipment;
@@ -87,10 +88,18 @@ public class PresetSeanceService implements PresetSeanceUseCase {
                         .filter(l -> l.getId().equals(vo.getIdLateralite()))
                         .findFirst()
                         .orElseThrow(() -> new IllegalArgumentException("Lateralite ID " + vo.getIdLateralite() + " invalide"));
-                Equipment equipment = equipments.stream()
-                        .filter(eq -> eq.getId().equals(vo.getIdEquipment()))
+                List<RelExerciseEquipment> relEquipments = exercise.getRelExerciseEquipments();
+
+                // Choisir l'équipement proposé ou le default de l'exercice
+                RelExerciseEquipment relEq = relEquipments.stream()
+                        .filter(eq -> eq.getEquipment().getId().equals(vo.getIdEquipment()))
                         .findFirst()
-                        .orElseThrow(() -> new IllegalArgumentException("Equipment ID " + vo.getIdEquipment() + " invalide"));
+                        .orElseGet(() -> relEquipments.stream()
+                                .filter(RelExerciseEquipment::getIsDefault)
+                                .findFirst()
+                                .orElse(null)); // si aucun default trouvé, renvoie null
+
+                Equipment equipment = (relEq != null) ? relEq.getEquipment() : null;
 
                 if (existing != null) {
                     // Mettre à jour seulement si nécessaire
