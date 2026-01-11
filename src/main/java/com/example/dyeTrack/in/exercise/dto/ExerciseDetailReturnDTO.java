@@ -2,6 +2,7 @@ package com.example.dyeTrack.in.exercise.dto;
 
 import java.util.List;
 
+import com.example.dyeTrack.core.entity.Equipment;
 import com.example.dyeTrack.core.entity.Exercise;
 import com.example.dyeTrack.core.valueobject.MuscleInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -12,6 +13,10 @@ public class ExerciseDetailReturnDTO extends ExerciseUltraLightReturnDTO {
     private List<MuscleInfoReturnDTO> muscleInfos;
     private Long mainFocusGroup;
     private Long mainMuscle;
+
+    private Long defaultEquipment;
+
+    private List<EquipmentInfoReturnDTO> equipmentInfo;
 
     private String descriptionFR;
     private String descriptionEN;
@@ -33,17 +38,8 @@ public class ExerciseDetailReturnDTO extends ExerciseUltraLightReturnDTO {
         this.mainFocusGroup = mainFocusGroup;
     }
 
-    public ExerciseDetailReturnDTO(Exercise exercise, List<MuscleInfoReturnDTO> muscleInfos, Long mainFocusGroup) {
-        super(exercise);
-        this.descriptionFR = exercise.getDescriptionFR();
-        this.descriptionEN = exercise.getDescriptionEN();
-        this.linkVideo = exercise.getLinkVideo();
-        this.idCreator = exercise.getUser() != null ? exercise.getUser().getId() : null;
-        this.muscleInfos = muscleInfos;
-        this.mainFocusGroup = mainFocusGroup;
-    }
 
-    public ExerciseDetailReturnDTO(Exercise exercise, List<MuscleInfoReturnDTO> muscleInfos, Long mainFocusGroup,Long mainMuscle) {
+    public ExerciseDetailReturnDTO(Exercise exercise, List<MuscleInfoReturnDTO> muscleInfos, Long mainFocusGroup,Long mainMuscle,List<EquipmentInfoReturnDTO> equipmentInfo,Long defaultEquipment) {
         super(exercise);
         this.descriptionFR = exercise.getDescriptionFR();
         this.descriptionEN = exercise.getDescriptionEN();
@@ -52,6 +48,8 @@ public class ExerciseDetailReturnDTO extends ExerciseUltraLightReturnDTO {
         this.muscleInfos = muscleInfos;
         this.mainFocusGroup = mainFocusGroup;
         this.mainMuscle = mainMuscle;
+        this.defaultEquipment = defaultEquipment;
+        this.equipmentInfo= equipmentInfo;
     }
 
     public ExerciseDetailReturnDTO(Exercise exercise) {
@@ -115,5 +113,21 @@ public class ExerciseDetailReturnDTO extends ExerciseUltraLightReturnDTO {
     }
     public Long getMainMuscle() {
         return mainMuscle;
+    }
+
+    public List<EquipmentInfoReturnDTO> getEquipmentInfo() {
+        return equipmentInfo;
+    }
+
+    public void setEquipmentInfo(List<EquipmentInfoReturnDTO> equipmentInfo) {
+        this.equipmentInfo = equipmentInfo;
+    }
+
+    public Long getDefaultEquipment() {
+        return defaultEquipment;
+    }
+
+    public void setDefaultEquipment(Long defaultEquipment) {
+        this.defaultEquipment = defaultEquipment;
     }
 }

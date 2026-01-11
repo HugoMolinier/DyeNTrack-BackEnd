@@ -2,6 +2,7 @@ package com.example.dyeTrack.in.exercise.dto;
 
 import java.util.List;
 
+import com.example.dyeTrack.core.valueobject.EquipmentInfo;
 import com.example.dyeTrack.core.valueobject.MuscleInfo;
 
 import jakarta.validation.constraints.NotBlank;
@@ -20,17 +21,20 @@ public class ExerciseCreateDTO {
     @NotBlank(message = "relExerciseMuscle est obligatoire")
     private List<MuscleInfo> relExerciseMuscle;
 
+
+    private List<EquipmentInfo> equipmentInfos;
     public ExerciseCreateDTO() {
     }
 
     public ExerciseCreateDTO(String nameFR, String nameEN, String descriptionFR,String descriptionEN, String linkVideo,
-                             List<MuscleInfo> relExerciseMuscle) {
+                             List<MuscleInfo> relExerciseMuscle,         List<EquipmentInfo> equipmentInfos) {
         this.nameFR = nameFR;
         this.nameEN = nameEN;
         this.descriptionFR = descriptionFR;
         this.descriptionEN = descriptionEN;
         this.linkVideo = linkVideo;
         this.relExerciseMuscle = relExerciseMuscle;
+        this.equipmentInfos = equipmentInfos;
     }
 
 
@@ -76,5 +80,13 @@ public class ExerciseCreateDTO {
 
     public void setRelExerciseMuscles(List<MuscleInfo> relExerciseMuscle) {
         this.relExerciseMuscle = relExerciseMuscle;
+    }
+
+    public List<EquipmentInfo> getEquipmentInfos() {
+        return equipmentInfos;
+    }
+
+    public void setEquipmentInfos(List<EquipmentInfo> equipmentInfos) {
+        this.equipmentInfos = equipmentInfos;
     }
 }

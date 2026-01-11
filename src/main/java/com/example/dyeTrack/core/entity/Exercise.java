@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.dyeTrack.core.entity.PresetSeanceExercise.PresetSeanceExercise;
+import com.example.dyeTrack.core.entity.RelEexerciseEquipment.RelExerciseEquipment;
 import com.example.dyeTrack.core.entity.RelExerciseMuscle.RelExerciseMuscle;
 import com.example.dyeTrack.core.entity.infoExerciseUser.InfoExerciseUser;
 
@@ -45,7 +46,7 @@ public class Exercise {
     @JoinColumn(name = "idCreator", nullable = true)
     private User user;
 
-    @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<RelExerciseMuscle> relExerciseMuscles = new ArrayList<>();
 
     @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -54,12 +55,29 @@ public class Exercise {
     @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InfoExerciseUser> relRecensementExercises = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "exercise",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
+    )
+    private List<RelExerciseEquipment> relExerciseEquipments = new ArrayList<>();
+
+
     public List<InfoExerciseUser> getRelRecensementExercises() {
         return relRecensementExercises;
     }
 
     public void setRelRecensementExercises(List<InfoExerciseUser> relRecensementExercises) {
         this.relRecensementExercises = relRecensementExercises;
+    }
+
+    public List<RelExerciseEquipment> getRelExerciseEquipments() {
+        return relExerciseEquipments;
+    }
+
+    public void setRelExerciseEquipments(List<RelExerciseEquipment> relExerciseEquipments) {
+        this.relExerciseEquipments = relExerciseEquipments;
     }
 
     public List<RelExerciseMuscle> getRelExerciseMuscles() {

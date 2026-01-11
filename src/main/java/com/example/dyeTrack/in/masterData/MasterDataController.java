@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.example.dyeTrack.core.entity.RelEexerciseEquipment.RelExerciseEquipment;
+import com.example.dyeTrack.in.exercise.dto.EquipmentInfoReturnDTO;
 import com.example.dyeTrack.in.exercise.dto.MuscleInfoReturnDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -101,7 +103,20 @@ public class MasterDataController {
                             mainFocus = rel.getMuscle().getMuscleGroup().getId();
                         }
                     }
-                    return new ExerciseDetailReturnDTO(ex, muscles, mainFocus,mainMuscle);
+
+
+                    List<EquipmentInfoReturnDTO> equipmentInfos = new ArrayList<>();
+                    Long defaultEquipment = null;
+                    for (RelExerciseEquipment relEq : ex.getRelExerciseEquipments()) {
+                        if (relEq.getEquipment() != null) {
+                            equipmentInfos.add(new EquipmentInfoReturnDTO(relEq.getEquipment().getId()));
+                            if (relEq.getIsDefault()) {
+                                defaultEquipment = relEq.getEquipment().getId();
+                            }
+                        }
+                    }
+
+                    return new ExerciseDetailReturnDTO(ex, muscles, mainFocus,mainMuscle, equipmentInfos, defaultEquipment);
                 })
                 .collect(Collectors.toList());
 

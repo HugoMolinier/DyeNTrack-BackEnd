@@ -1,11 +1,9 @@
 package com.example.dyeTrack.core.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.example.dyeTrack.core.entity.RelEexerciseEquipment.RelExerciseEquipment;
 import org.springframework.stereotype.Service;
 
 import com.example.dyeTrack.core.entity.DayDataOfUser;
@@ -106,11 +104,19 @@ public class SeanceTrackService implements SeanceTrackUseCase {
                     .orElseThrow(() -> new IllegalArgumentException(
                             "Lateralite ID " + exerciseVO.getLateraliteId() + " invalide"));
 
-            Equipment equipment = equipments.stream()
-                    .filter(eq -> eq.getId().equals(exerciseVO.getEquipmentId()))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "Equipment ID " + exerciseVO.getEquipmentId() + " invalide"));
+            Optional<RelExerciseEquipment> relEquipment = plannedExercise.getExercise()
+                    .getRelExerciseEquipments().stream()
+                    .filter(eq -> eq.getEquipment().getId().equals(exerciseVO.getEquipmentId()))
+                    .findFirst();
+
+            if (relEquipment.isEmpty()) {
+                relEquipment = plannedExercise.getExercise()
+                        .getRelExerciseEquipments().stream()
+                        .filter(RelExerciseEquipment::getIsDefault)
+                        .findFirst();
+            }
+
+            Equipment equipment = relEquipment.map(RelExerciseEquipment::getEquipment).orElse(null);
 
             if (lateralite != plannedExercise.getLateralite()) {
                 plannedExercise.getSetsOfPlannedExercise().clear();

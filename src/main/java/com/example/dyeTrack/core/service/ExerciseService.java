@@ -1,11 +1,13 @@
 package com.example.dyeTrack.core.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.example.dyeTrack.core.entity.Equipment;
+import com.example.dyeTrack.core.entity.RelEexerciseEquipment.RelExerciseEquipment;
+import com.example.dyeTrack.core.port.out.EquipmentPort;
+import com.example.dyeTrack.core.valueobject.EquipmentInfo;
+import com.example.dyeTrack.in.exercise.dto.ExerciseDetailReturnDTO;
 import org.springframework.stereotype.Service;
 
 import com.example.dyeTrack.core.entity.Exercise;
@@ -28,12 +30,14 @@ public class ExerciseService implements ExerciseUseCase {
     private final ExercisePort exercisePort;
     private final MusclePort musclePort;
     private final UserPort userPort;
+    private final EquipmentPort equipmentPort;
 
     public ExerciseService(ExercisePort exercisePort, UserPort userPort,
-            MusclePort musclePort) {
+            MusclePort musclePort,EquipmentPort equipmentPort) {
         this.exercisePort = exercisePort;
         this.userPort = userPort;
         this.musclePort = musclePort;
+        this.equipmentPort=equipmentPort;
     }
 
     public Exercise getByIdExercise(Long idExercise, Boolean onlyPrincipalMuscle) {
@@ -52,8 +56,8 @@ public class ExerciseService implements ExerciseUseCase {
     }
 
     @Transactional
-    public Exercise create(String nameFR,String nameEN, String descriptionFR,String descriptionEN, String linkVideo, Long idUser,
-            List<MuscleInfo> relExerciseMuscles) {
+    public Exercise create(String nameFR, String nameEN, String descriptionFR, String descriptionEN, String linkVideo, Long idUser,
+                           List<MuscleInfo> relExerciseMuscles, List<EquipmentInfo> equipmentInfos) {
         if (nameFR == null)
             throw new IllegalArgumentException("nameFR empty");
         if (nameEN == null)
@@ -69,6 +73,9 @@ public class ExerciseService implements ExerciseUseCase {
         List<RelExerciseMuscle> relations = buildRelExerciseMuscles(exercise, relExerciseMuscles);
         exercise.getRelExerciseMuscles().addAll(relations);
 
+        List<RelExerciseEquipment> relationsEquipment = buildEquipmentInfo(exercise, equipmentInfos);
+        exercise.getRelExerciseEquipments().addAll(relationsEquipment);
+
         return exercisePort.create(exercise);
     }
 
@@ -76,7 +83,7 @@ public class ExerciseService implements ExerciseUseCase {
 
     @Transactional
     public Exercise update(Long idExercise, Long idUserQuiModifie, String nameFR,String nameEN, String descriptionFR,String descriptionEN, String linkVideo,
-            List<MuscleInfo> relExerciseMuscles) {
+            List<MuscleInfo> relExerciseMuscles, List<EquipmentInfo> equipmentInfos) {
 
         Exercise exercise = EntityUtils.getExerciseOrThrow(idExercise, exercisePort);
         if (exercise.getUser() == null)
@@ -96,8 +103,44 @@ public class ExerciseService implements ExerciseUseCase {
             exercise.getRelExerciseMuscles().addAll(relations);
         }
 
+        if (equipmentInfos != null && !equipmentInfos.isEmpty()) {
+            List<RelExerciseEquipment> relationsEquipment = buildEquipmentInfo(exercise, equipmentInfos);
+            exercise.getRelExerciseEquipments().addAll(relationsEquipment);
+        }
         return exercisePort.update(exercise);
     }
+
+
+    //Temporaire
+    @Transactional
+    public void assignAllEquipmentToExistingExercises() {
+        List<Exercise> exercises =   this.getAll(
+                null, true, null, false,
+                true, null,
+                null, null);
+        List<Equipment> allEquipment = equipmentPort.getAll();
+
+        if(allEquipment.isEmpty()) {
+            throw new IllegalStateException("Aucun équipement disponible pour assigner");
+        }
+
+        for (Exercise exercise : exercises) {
+            if (exercise.getRelExerciseEquipments().isEmpty() ||exercise.getRelExerciseEquipments() ==null) {
+                exercise.getRelExerciseEquipments().clear();
+
+                boolean first = true;
+                for (Equipment equipment : allEquipment) {
+                    exercise.getRelExerciseEquipments().add(
+                            new RelExerciseEquipment(exercise, equipment, first)
+                    );
+                    first = false;
+                }
+
+                exercisePort.update(exercise);
+            }
+        }
+    }
+
 
     @Transactional
     public void delete(Long idExercise, Long idUserQuiDelete) {
@@ -144,6 +187,59 @@ public class ExerciseService implements ExerciseUseCase {
         }
         if (principalCount != 1)
             throw new IllegalArgumentException("Il doit y avoir 1 muscle principal");
+
+        return relations;
+    }
+
+    private List<RelExerciseEquipment> buildEquipmentInfo(Exercise exercise, List<EquipmentInfo> equipmentInfos){
+        List<RelExerciseEquipment> relations = new ArrayList<>();
+
+        // 1️⃣ Cas : aucun équipement fourni
+        if (equipmentInfos == null || equipmentInfos.isEmpty()) {
+            List<Equipment> allEquipment = equipmentPort.getAll();
+            if (allEquipment.isEmpty()) {
+                throw new EntityNotFoundException("Aucun équipement disponible");
+            }
+            allEquipment.forEach( equipment ->
+                    relations.add(new RelExerciseEquipment(exercise, equipment, relations.isEmpty())));
+            return relations;
+        }
+        boolean defaultFound = false;
+        Set<Long> equipmentIds = new HashSet<>();
+
+        for (EquipmentInfo info : equipmentInfos) {
+
+            Long equipmentId = info.getIdEquipment();
+
+            if (!equipmentIds.add(equipmentId)) {
+                throw new IllegalArgumentException(
+                        "L'équipement " + equipmentId + " est présent plusieurs fois"
+                );
+            }
+
+            Equipment equipment = equipmentPort.getById(equipmentId).orElseThrow(() ->
+                            new EntityNotFoundException("Equipment not found with id " + equipmentId)
+                    );
+
+            if (info.isDefault() &&defaultFound ) {
+                if (defaultFound) {
+                    throw new IllegalArgumentException(
+                            "Un seul équipement par défaut est autorisé"
+                    );
+                }
+                defaultFound = true;
+            }
+
+            relations.add(
+                    new RelExerciseEquipment(exercise, equipment, info.isDefault())
+            );
+        }
+
+        if (!defaultFound) {
+            throw new IllegalArgumentException(
+                    "Un équipement par défaut est obligatoire"
+            );
+        }
 
         return relations;
     }
