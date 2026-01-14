@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DyeNTrack – Suivi nutrition & sport</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="assets/favicon-32x32.png" />
+  </head>
+  <body class="bg-[#121212] text-[#E0E0E0]">
+    <!-- NAVBAR -->
+    <nav
+      class="sticky top-0 z-50 bg-[#1E1E1E] flex justify-between items-center px-10 md:px-52 py-1 shadow-md"
+    >
+      <div class="text-xl font-bold text-[#3BB266] flex items-center gap-2">
+        <img
+          src="assets/icon-playstore.png"
+          alt="Play Store"
+          class="w-12 h-12 rounded-lg"
+        />
+        DyeNTrack
+      </div>
+      <div class="space-x-6">
+        <a href="#hero" class="hover:text-[#3BB266]">Accueil</a>
+        <a href="#features" class="hover:text-[#3BB266]">Fonctionnalités</a>
+        <a href="#demo" class="hover:text-[#3BB266]">Démonstration</a>
+                <a href="#faq" class="hover:text-[#3BB266]">FAQ</a>
+        <a href="#download" class="hover:text-[#3BB266]">Download</a>
+                <a href="swagger-ui/index.html" class="hover:text-[#3BB266]">Api</a>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section
+      id="hero"
+      class="grid md:grid-cols-2 items-center px-6 md:px-52 py-20"
+    >
+      <div class="pl-6">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6 text-white">
+          Ton suivi nutrition & sport sans prise de tête
+        </h1>
+        <p class="text-[#9CA3AF] mb-6">
+          DyeNTrack t’aide à suivre tes entraînements, ton alimentation et ton
+          sommeil facilement. Analyse automatique de tes performances et
+          conseils personnalisés.
+        </p>
+        <a
+          href="#download"
+          class="bg-[#3BB266] text-black font-semibold px-6 py-3 rounded-lg hover:bg-green-600 transition"
+        >
+          Télécharger l’app
+        </a>
+      </div>
+      <div>
+        <img
+          src="assets/hero.png"
+          alt="App preview"
+          class="w-full max-w-xs mx-auto"
+        />
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" class="px-6 md:px-52 py-20 text-center">
+      <h4 class="text-[#3BB266] font-semibold mb-2">Fonctionnalité</h4>
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+        Transforme ton suivi sportif et nutritionnel
+      </h2>
+      <p class="text-[#9CA3AF] mb-12 max-w-2xl mx-auto">
+        Toutes tes performances, ton alimentation et ton bien-être <br />
+        réunis dans une seule application simple et intuitive.
+      </p>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="bg-[#1E1E1E] p-6 rounded-xl shadow-md">
+          <div class="text-3xl pb-8 pt-4">📓</div>
+          <h3 class="text-[#3BB266] text-xl font-semibold mb-2">
+            Cahier d’entraînement
+          </h3>
+          <p class="text-[#9CA3AF]">
+            Retrouve toutes tes séances et performances passées en un seul
+            endroit.
+          </p>
+        </div>
+        <div class="bg-[#1E1E1E] p-6 rounded-xl shadow-md">
+          <div class="text-3xl pb-8 pt-4">📈</div>
+          <h3 class="text-[#3BB266] text-xl font-semibold mb-2">Graphiques</h3>
+          <p class="text-[#9CA3AF]">
+            Visualise facilement ta progression avec des graphiques clairs.
+          </p>
+        </div>
+        <div class="bg-[#1E1E1E] p-6 rounded-xl shadow-md">
+          <div class="text-3xl pb-8 pt-4">🏋️</div>
+
+          <h3 class="text-[#3BB266] text-xl font-semibold mb-2">
+            Exercices & équipements
+          </h3>
+          <p class="text-[#9CA3AF]">
+            Des conseils adaptés à ton matériel et ton niveau pour chaque
+            séance.
+          </p>
+        </div>
+        <div class="bg-[#1E1E1E] p-6 rounded-xl shadow-md">
+          <div class="text-3xl pb-8 pt-4">🔄</div>
+          <h3 class="text-[#3BB266] text-xl font-semibold mb-2">
+            Synchronisation
+          </h3>
+          <p class="text-[#9CA3AF]">
+            Toutes tes données centralisées pour un suivi simple et efficace.
+            Pas Obligé de se connecter.
+          </p>
+        </div>
+      </div>
+    </section>
+    <section id="demo" class="px-6 bg-[#1E1E1E] md:px-52 py-20 text-center">
+      <h4 class="text-[#3BB266] font-semibold mb-2">Démonstration</h4>
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+        Une interface simple et Facile
+      </h2>
+      <p class="text-[#9CA3AF] mb-12 max-w-2xl mx-auto">
+        Améliorer votre entrainement en le suivant <br />
+        avec cette application accessible et simple à utiliser.
+      </p>
+
+      <div class="flex flex-wrap justify-center gap-6">
+        <img
+          src="assets/home.png"
+          alt="App preview"
+          class="w-40 md:w-48 rounded-xl shadow-md"
+        />
+        <img
+          src="assets/seance.png"
+          alt="App preview"
+          class="w-40 md:w-48 rounded-xl shadow-md"
+        />
+        <img
+          src="assets/analyse.png"
+          alt="App preview"
+          class="w-40 md:w-48 rounded-xl shadow-md"
+        />
+        <img
+          src="assets/analyse3.png"
+          alt="App preview"
+          class="w-40 md:w-48 rounded-xl shadow-md"
+        />
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="px-6 md:px-52 py-20 text-center">
+      <h4 class="text-[#3BB266] font-semibold mb-2">FAQ</h4>
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 pb-12">
+        ❓ Questions fréquentes
+      </h2>
+
+      <div class="grid md:grid-cols-2 pt-4 gap-10 items-start">
+        <!-- FAQ QUESTIONS -->
+        <div>
+          <h3 class="text-3xl md:text-2xl font-bold text-white text-left mb-4">
+            Vous avez des questions ?
+          </h3>
+          <p class="text-left mb-6 text-[#9CA3AF]">
+            Tu te poses sûrement des questions avant de commencer. Voici les
+            réponses aux interrogations les plus fréquentes.
+          </p>
+
+          <div class="space-y-4">
+            <!-- Question 0 -->
+            <div class="bg-[#1E1E1E] rounded-lg overflow-hidden">
+              <button
+                onclick="toggleFaq(this)"
+                class="w-full text-left px-4 py-3 font-semibold flex justify-between items-center"
+              >
+                À quoi sert DyeNTrack ?
+                <span class="text-[#3BB266] text-xl">+</span>
+              </button>
+
+              <div
+                class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+              >
+                <p class="px-4 py-3 text-[#9CA3AF] mb-4 text-left">
+                  DyeNTrack est une application pensée pour les sportifs qui
+                  veulent suivre leur entraînement et leur alimentation sans
+                  complexité .
+                </p>
+                <ul class="px-4 space-y-3 text-[#9CA3AF] text-left">
+                  <li>✅ Remplacer le cahier d’entraînement papier</li>
+                  <li>✅ Suivre tes performances et ta progression</li>
+                  <li>✅ Centraliser tes séances, exercices et analyses</li>
+                  <li>
+                    ✅ Avoir un suivi simple, même sans connexion internet
+                  </li>
+                </ul>
+                <p class="px-4 py-3 text-[#9CA3AF] mt-4 text-left">
+                  L’objectif est clair :
+                  <strong class="text-white">aller à l’essentiel</strong>, sans
+                  compter les calories ni passer du temps sur des réglages
+                  inutiles.
+                </p>
+              </div>
+            </div>
+            <!-- Question 1 -->
+            <div class="bg-[#1E1E1E] rounded-lg overflow-hidden">
+              <button
+                onclick="toggleFaq(this)"
+                class="w-full text-left px-4 py-3 font-semibold flex justify-between items-center"
+              >
+                L’app est-elle gratuite ?
+                <span class="text-[#3BB266] text-xl">+</span>
+              </button>
+
+              <div
+                class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+              >
+                <p class="px-4 py-3 text-left text-[#9CA3AF]">
+                  Oui, l’application est entièrement gratuite et le restera.
+                  DyeNTrack est un projet étudiant développé pour répondre à un
+                  besoin réel : remplacer un cahier d’entraînement papier par un
+                  outil simple, pratique et accessible à tous. Il n’y a ni
+                  abonnement, ni fonctionnalités cachées derrière un paiement.
+                </p>
+              </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="bg-[#1E1E1E] rounded-lg overflow-hidden">
+              <button
+                onclick="toggleFaq(this)"
+                class="w-full text-left px-4 py-3 font-semibold flex justify-between items-center"
+              >
+                Suis-je obligé de me connecter ?
+                <span class="text-[#3BB266] text-xl">+</span>
+              </button>
+
+              <div
+                class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+              >
+                <p class="px-4 py-3 text-left text-[#9CA3AF]">
+                  Non, aucune connexion n’est obligatoire pour utiliser
+                  l’application. DyeNTrack fonctionne entièrement hors ligne et
+                  sans création de compte. La création d’un compte est
+                  optionnelle et permet uniquement de sauvegarder tes données
+                  sur un serveur, de les retrouver sur plusieurs appareils et
+                  d’accéder à certaines fonctionnalités avancées.
+                </p>
+              </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="bg-[#1E1E1E] rounded-lg overflow-hidden">
+              <button
+                onclick="toggleFaq(this)"
+                class="w-full text-left px-4 py-3 font-semibold flex justify-between items-center"
+              >
+                Mes données sont-elles sécurisées ?
+                <span class="text-[#3BB266] text-xl">+</span>
+              </button>
+
+              <div
+                class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
+              >
+                <p class="px-4 py-3 text-left text-[#9CA3AF]">
+                  Oui, la sécurité et la confidentialité de tes données sont une
+                  priorité. Les informations sensibles comme les adresses e-mail
+                  et les mots de passe sont chiffrées. Aucune donnée personnelle
+                  n’est partagée ou exploitée à des fins commerciales. Tu restes
+                  propriétaire de tes informations.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center md:text-left relative pl-12">
+          <video
+            src="assets/demo.mp4"
+            class="mx-auto md:mx-0 max-w-xs rounded-lg"
+            autoplay
+            muted
+            controls
+            loop
+            playsinline
+          ></video>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOWNLOAD -->
+    <section
+      id="download"
+      class="grid md:grid-cols-2 gap-10 items-center px-6 md:px-52 py-20"
+    >
+          <div class="p-6 rounded-2xl shadow-md">
+        <img
+          src="assets/mock.png"
+          alt="App mobile"
+          class="w-full h-80 object-contain"
+        />
+      </div>
+      <div>
+        <div class="text-[#3BB266] uppercase font-bold text-sm mb-2">
+          Téléchargement
+        </div>
+        <h2 class="text-3xl font-bold mb-4 text-white">
+          Disponible sur Android
+        </h2>
+        <p class="text-[#9CA3AF] mb-6">
+          Suis facilement ton alimentation, tes entraînements et ton sommeil
+          avec une application simple et rapide.<br />
+          Pour l'instant en démo privé sur le play store
+        </p>
+        <div class="flex space-x-4 mb-6 pt-4">
+          <img src="assets/playstore.png" alt="Google Play" class="h-12" />
+        </div>
+      </div>
+
+      </div>
+    </section>
+    <!-- FOOTER -->
+    <footer class="bg-[#1E1E1E] text-[#9CA3AF] text-center py-10">
+      © 2026 DyeNTrack – Tous droits réservés
+    </footer>
+
+    <script>
+      function toggleFaq(button) {
+        const currentAnswer = button.nextElementSibling;
+        const currentIcon = button.querySelector("span");
+
+        document.querySelectorAll(".faq-answer").forEach((answer) => {
+          if (answer !== currentAnswer) {
+            answer.style.maxHeight = null;
+            answer.previousElementSibling.querySelector("span").textContent =
+              "+";
+          }
+        });
+
+        if (currentAnswer.style.maxHeight) {
+          currentAnswer.style.maxHeight = null;
+          currentIcon.textContent = "+";
+        } else {
+          currentAnswer.style.maxHeight = currentAnswer.scrollHeight + "px";
+          currentIcon.textContent = "−";
+        }
+      }
+
+      // Ouvre la première question par défaut
+      document.addEventListener("DOMContentLoaded", () => {
+        const firstAnswer = document.querySelector(".faq-answer");
+        if (firstAnswer) {
+          firstAnswer.style.maxHeight = firstAnswer.scrollHeight + "px";
+          firstAnswer.previousElementSibling.querySelector("span").textContent =
+            "−";
+        }
+      });
+    </script>
+  </body>
+</html>

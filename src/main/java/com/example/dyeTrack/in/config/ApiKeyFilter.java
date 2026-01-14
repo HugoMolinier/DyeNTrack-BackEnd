@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Component
 @Order(1)
@@ -27,7 +28,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getRequestURI();
-        if (path.startsWith("/api-docs") || path.startsWith("/swagger-ui") || path.startsWith("/webjars")) {
+        if (Objects.equals(path, "/") ||        path.startsWith("/assets/") || path.startsWith("/api-docs") || path.startsWith("/swagger-ui") || path.startsWith("/webjars")) {
             filterChain.doFilter(request, response);
             return;
         }
