@@ -22,13 +22,10 @@ public class ApiKeyFilter extends OncePerRequestFilter {
     private String apiKey;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String path = request.getRequestURI();
-        if (Objects.equals(path, "/") ||        path.startsWith("/assets/") || path.startsWith("/api-docs") || path.startsWith("/swagger-ui") || path.startsWith("/webjars")) {
+        if (Objects.equals(path, "/") || path.startsWith("/index.html") || path.startsWith("/privacy.html") || path.startsWith("/assets/") || path.startsWith("/api-docs") || path.startsWith("/swagger-ui") || path.startsWith("/webjars")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -37,9 +34,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         if (headerKey == null || !headerKey.equals(apiKey)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
-            response.getWriter()
-                    .write("{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Invalid API Key\",\"path\":\""
-                            + path + "\"}");
+            response.getWriter().write("{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Invalid API Key\",\"path\":\"" + path + "\"}");
             return;
         }
 
