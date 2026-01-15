@@ -84,4 +84,13 @@ public class UserController {
         return ResponseBuilder.success(response, "Info Utilisateur mis à jour avec succès");
     }
 
+
+    @DeleteMapping("/delete")
+    @SecurityRequirement(name = "bearerAuth")
+    @Operation(summary = "Delete All User Information", description = "Delete Connected User", security = @SecurityRequirement(name = "bearerAuth"))
+    public ResponseEntity<Void> delete() {
+        Long idTokenUser = SecurityUtil.getUserIdFromContext();
+        service.delete(idTokenUser);
+        return ResponseEntity.noContent().build();
+    }
 }

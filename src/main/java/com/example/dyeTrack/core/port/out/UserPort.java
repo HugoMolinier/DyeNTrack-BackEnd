@@ -9,4 +9,5 @@ public interface UserPort {
 
     User findByMailHashed(String email);
 
+    void delete(User user);
 }

@@ -17,4 +17,5 @@ public interface UserUseCase {
         User update(Long idUser, String pseudo, Date birthdate, Integer height,
                     Boolean sexeMale);
 
+        void delete(Long idUser);
 }

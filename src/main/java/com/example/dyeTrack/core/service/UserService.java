@@ -104,6 +104,10 @@ public class UserService implements UserUseCase {
 
         return userPort.save(user);
     }
+    public void delete(Long idUser) {
+        User user = EntityUtils.getUserOrThrow(idUser, userPort);
+        userPort.delete(user);
+    }
 
     /* --- Private helpers --- */
 

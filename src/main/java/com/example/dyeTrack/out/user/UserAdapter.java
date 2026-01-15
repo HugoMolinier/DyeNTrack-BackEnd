@@ -28,4 +28,8 @@ public class UserAdapter implements UserPort {
         return userRepository.findByEmail(hashedEmail).orElse(null);
     }
 
+    @Override
+    public void delete(User user) {
+        userRepository.delete(user);
+    }
 }
