@@ -105,4 +105,14 @@ public class NutritionTrack {
     public void setDataOfUser(DayDataOfUser dataOfUser) {
         this.dataOfUser = dataOfUser;
     }
+
+    public boolean isEmpty() {
+        return calories == 0
+                && proteins == 0
+                && lipids == 0
+                && carbohydrates == 0
+                && fiber == 0
+                && cafeins == 0;
+    }
+
 }

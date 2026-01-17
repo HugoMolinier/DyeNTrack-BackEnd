@@ -42,4 +42,6 @@ public class SeanceTrackVO {
     public void setPlannedExercises(List<PlannedExerciseVO> plannedExerciseVOs) {
         this.plannedExercises = plannedExerciseVOs != null ? plannedExerciseVOs : new ArrayList<>();
     }
+
+
 }

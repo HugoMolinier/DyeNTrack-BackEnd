@@ -85,4 +85,11 @@ public class PhysioTrack {
     public void setDataOfUser(DayDataOfUser dataOfUser) {
         this.dataOfUser = dataOfUser;
     }
+
+    public boolean isEmpty() {
+        return weight == 0
+                && step == 0
+                && hourOfSleep == 0
+                && (mood == null || mood.isBlank());
+    }
 }

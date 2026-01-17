@@ -64,7 +64,6 @@ public class SeanceTrackService implements SeanceTrackUseCase {
             seanceTrack = new SeanceTrack();
             seanceTrack.setDataOfUser(dataOfUser);
         }
-        List<Equipment> equipments = equipmentPort.getAll();
         List<Lateralite> lateralites = lateralitePort.getAll();
 
         seanceTrack.setStartHour(vo.getStartHour());

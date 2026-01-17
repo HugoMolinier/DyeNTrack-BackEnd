@@ -61,7 +61,7 @@ public class DayDataOfUserService implements DayDataOfUserUseCase {
         // Vérifier si la journée existe déjà
         DayDataOfUser dayDataOfUser = dayDataOfUserPort.getDayDataOfUser(idUser, dayDataOfUserVO.getDayData());
 
-        // Si les deux tracks sont null et qu'il existe une journée, on supprime
+        // Si les trois tracks sont null et qu'il existe une journée, on supprime
         if (dayDataOfUserVO.getPhysioTrack() == null && dayDataOfUserVO.getNutritionTrack() == null
                 && dayDataOfUserVO.getSeanceTrack() == null) {
             if (dayDataOfUser != null) {
@@ -78,43 +78,53 @@ public class DayDataOfUserService implements DayDataOfUserUseCase {
 
         // Créer ou mettre à jour PhysioTrack
         if (dayDataOfUserVO.getPhysioTrack() != null) {
-            PhysioTrack physio = dayDataOfUser.getPhysioTrack();
-            if (physio == null) {
-                physio = new PhysioTrack(
-                        dayDataOfUserVO.getPhysioTrack().getWeight(),
-                        dayDataOfUserVO.getPhysioTrack().getStep(),
-                        dayDataOfUserVO.getPhysioTrack().getHourOfSleep(),
-                        dayDataOfUserVO.getPhysioTrack().getMood(),
-                        dayDataOfUser);
-                dayDataOfUser.setPhysioTrack(physio);
-            } else {
-                physio.setWeight(dayDataOfUserVO.getPhysioTrack().getWeight());
-                physio.setStep(dayDataOfUserVO.getPhysioTrack().getStep());
-                physio.setHourOfSleep(dayDataOfUserVO.getPhysioTrack().getHourOfSleep());
-                physio.setMood(dayDataOfUserVO.getPhysioTrack().getMood());
+            var physioVO = dayDataOfUserVO.getPhysioTrack();
+            if(physioVO.isEmpty()) {
+                dayDataOfUser.setPhysioTrack(null);
+            }else {
+                PhysioTrack physio = dayDataOfUser.getPhysioTrack();
+                if (physio == null) {
+                    physio = new PhysioTrack(
+                            physioVO.getWeight(),
+                            physioVO.getStep(),
+                            physioVO.getHourOfSleep(),
+                            physioVO.getMood(),
+                            dayDataOfUser);
+                    dayDataOfUser.setPhysioTrack(physio);
+                } else {
+                    physio.setWeight(physioVO.getWeight());
+                    physio.setStep(physioVO.getStep());
+                    physio.setHourOfSleep(physioVO.getHourOfSleep());
+                    physio.setMood(physioVO.getMood());
+                }
             }
         }
 
         // Créer ou mettre à jour NutritionTrack
         if (dayDataOfUserVO.getNutritionTrack() != null) {
-            NutritionTrack nutrition = dayDataOfUser.getNutritionTrack();
-            if (nutrition == null) {
-                nutrition = new NutritionTrack(
-                        dayDataOfUserVO.getNutritionTrack().getCalories(),
-                        dayDataOfUserVO.getNutritionTrack().getProteins(),
-                        dayDataOfUserVO.getNutritionTrack().getLipids(),
-                        dayDataOfUserVO.getNutritionTrack().getCarbohydrates(),
-                        dayDataOfUserVO.getNutritionTrack().getFiber(),
-                        dayDataOfUserVO.getNutritionTrack().getCafeins(),
-                        dayDataOfUser);
-                dayDataOfUser.setNutritionTrack(nutrition);
-            } else {
-                nutrition.setCalories(dayDataOfUserVO.getNutritionTrack().getCalories());
-                nutrition.setProteins(dayDataOfUserVO.getNutritionTrack().getProteins());
-                nutrition.setLipids(dayDataOfUserVO.getNutritionTrack().getLipids());
-                nutrition.setCarbohydrates(dayDataOfUserVO.getNutritionTrack().getCarbohydrates());
-                nutrition.setFiber(dayDataOfUserVO.getNutritionTrack().getFiber());
-                nutrition.setCafeins(dayDataOfUserVO.getNutritionTrack().getCafeins());
+            var nutritionVO = dayDataOfUserVO.getNutritionTrack();
+            if(nutritionVO.isEmpty()) {
+                dayDataOfUser.setNutritionTrack(null);
+            }else {
+                NutritionTrack nutrition = dayDataOfUser.getNutritionTrack();
+                if (nutrition == null) {
+                    nutrition = new NutritionTrack(
+                            nutritionVO.getCalories(),
+                            nutritionVO.getProteins(),
+                            nutritionVO.getLipids(),
+                            nutritionVO.getCarbohydrates(),
+                            nutritionVO.getFiber(),
+                            nutritionVO.getCafeins(),
+                            dayDataOfUser);
+                    dayDataOfUser.setNutritionTrack(nutrition);
+                } else {
+                    nutrition.setCalories(nutritionVO.getCalories());
+                    nutrition.setProteins(nutritionVO.getProteins());
+                    nutrition.setLipids(nutritionVO.getLipids());
+                    nutrition.setCarbohydrates(nutritionVO.getCarbohydrates());
+                    nutrition.setFiber(nutritionVO.getFiber());
+                    nutrition.setCafeins(nutritionVO.getCafeins());
+                }
             }
         }
         if (dayDataOfUserVO.getSeanceTrack() != null) {
