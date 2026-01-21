@@ -74,6 +74,11 @@ public class MasterDataController {
         return ResponseBuilder.success(cachedData, "Toutes les données récupérées avec succès");
     }
 
+
+    @GetMapping("/reload")
+    public void reload(){
+        refreshCache();
+    }
     @GetMapping("/lastUpdate")
     public ResponseEntity<ResponseBuilder.ResponseDTO<Instant>> getLastUpdate() {
         return ResponseBuilder.success(lastUpdate, "Dernière mise à jour des données");
